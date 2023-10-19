@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEditor.PackageManager;
 using UnityEngine;
 
-public class LevelBackgroundController : IBackgroundController {
+public class LevelBackgroundController : AbstractBackgroundController {
   [SerializeField] private Sprite[] backgrounds;
 
-  [SerializeField] private IBackgroundRenderer backgroundRenderer;
-  private IBackgroundRenderer backgroundRendererInstance;
+  [SerializeField] private AbstractBackgroundRenderer backgroundRenderer;
+  private AbstractBackgroundRenderer backgroundRendererInstance;
 
 
   private readonly int initialBackgroundIndex = 0;
