@@ -245,6 +245,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DefaultResolution: {x: 1080, y: 1920}
   WidthOrHeight: 0
+  componentCamera: {fileID: 0}
+  initialSize: 0
+  targetAspect: 0
+  initialFov: 0
+  horizontalFov: 120
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
