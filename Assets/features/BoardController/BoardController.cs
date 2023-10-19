@@ -1,9 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BoardController : AbstractBoardController {
+public partial class BoardController : AbstractBoardController {
   [SerializeField] private AbstractWall wall;
+  [SerializeField] private AbstractBlock block;
   private GameObject boardHolder;
   private readonly float wallWidth = 0.1f;
 
@@ -14,6 +16,22 @@ public class BoardController : AbstractBoardController {
     boardHolder.transform.position = position;
 
     InitBounds(boardHolder.transform);
+    InitBlocks(boardHolder.transform);
+  }
+
+  private void InitBlocks(Transform parent) {
+    Config config = BoardConfig.GetConfig();
+
+    Action<Vector2> getInit(int points) => (Vector2 vector) => {
+      AbstractBlock blockInstance = Instantiate(block, vector, Quaternion.identity);
+      blockInstance.transform.SetParent(parent);
+      blockInstance.SetHitPoints(points);
+    };
+
+    config.blueBlocksPositions.ForEach(getInit(1));
+    config.redBlocksPositions.ForEach(getInit(2));
+    config.greenBlocksPositions.ForEach(getInit(3));
+    config.yellowBlocksPositions.ForEach(getInit(4));
   }
 
   private void InitBounds(Transform parent) {
