@@ -6,6 +6,8 @@ using UnityEngine;
 public partial class BoardController : AbstractBoardController {
   [SerializeField] private AbstractWall wall;
   [SerializeField] private AbstractBlock block;
+  [SerializeField] private AbstractBall ball;
+
   private GameObject boardHolder;
   private readonly float wallWidth = 0.1f;
 
@@ -17,6 +19,7 @@ public partial class BoardController : AbstractBoardController {
 
     InitBounds(boardHolder.transform);
     InitBlocks(boardHolder.transform);
+    InitBall(boardHolder.transform);
   }
 
   private void InitBlocks(Transform parent) {
@@ -44,10 +47,19 @@ public partial class BoardController : AbstractBoardController {
     rightWall.SetSize((wallWidth, GameConfig.CameraHeightUnits * 2));
     rightWall.transform.SetParent(parent);
 
-    Vector2 topWallPos = new(0, -GameConfig.CameraHeightUnits - (wallWidth / 2) - Mathf.Epsilon);
+    Vector2 topWallPos = new(0, GameConfig.CameraHeightUnits + (wallWidth / 2) + Mathf.Epsilon);
 
-    AbstractWall topWall = Instantiate(wall, -topWallPos, Quaternion.identity);
+    AbstractWall topWall = Instantiate(wall, topWallPos, Quaternion.identity);
     topWall.SetSize(((GameConfig.CameraWidthUnits * 2) + 2 * wallWidth, wallWidth));
     topWall.transform.SetParent(parent);
+
+    AbstractWall BottomWall = Instantiate(wall, -topWallPos, Quaternion.identity);
+    BottomWall.SetSize(((GameConfig.CameraWidthUnits * 2) + 2 * wallWidth, wallWidth));
+    BottomWall.transform.SetParent(parent);
+  }
+
+  private void InitBall(Transform parent) {
+    var ballInstance = Instantiate(ball, new(0, -9), Quaternion.identity);
+    ballInstance.transform.SetParent(parent);
   }
 }
