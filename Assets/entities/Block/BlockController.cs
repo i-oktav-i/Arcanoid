@@ -11,7 +11,13 @@ public class BlockController : AbstractBlock {
   public int HitPoints {
     get => hitPoints; set {
       hitPoints = value;
-      spritRenderer.sprite = sprites[value % sprites.Length];
+
+      if (value != 0) {
+        spritRenderer.sprite = sprites[value % sprites.Length];
+      }
+      else {
+        Destroy(gameObject);
+      }
     }
   }
 
