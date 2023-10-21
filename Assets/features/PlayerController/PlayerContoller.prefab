@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &8109199095617844458
+--- !u!1 &1573577594778505336
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,22 +8,22 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 334159452832186592}
-  - component: {fileID: 4692262327669612628}
+  - component: {fileID: 6438039211201425179}
+  - component: {fileID: 5729123848603483345}
   m_Layer: 0
-  m_Name: BoardController
+  m_Name: PlayerContoller
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &334159452832186592
+--- !u!4 &6438039211201425179
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8109199095617844458}
+  m_GameObject: {fileID: 1573577594778505336}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -32,19 +32,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4692262327669612628
+--- !u!114 &5729123848603483345
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8109199095617844458}
+  m_GameObject: {fileID: 1573577594778505336}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7839c101963d15e46952a53711e3327e, type: 3}
+  m_Script: {fileID: 11500000, guid: 1b5ce612b3fa0c54f8f65a4331dcb3ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wall: {fileID: 8398647790287896854, guid: 6e08cfda842c6b4428eda2966c1bb844, type: 3}
-  block: {fileID: 1793518328070472800, guid: 9384cf7172797c8408821fcaa3297c2a, type: 3}
-  playerController: {fileID: 5729123848603483345, guid: 189f9105c91f8ab4e948fb1ca8043ece, type: 3}
-  ballsDestroyer: {fileID: 3690429360544256261, guid: f1059c5942aada64bb927ade0503e60f, type: 3}
+  playerPrefab: {fileID: 8477006015057512989, guid: 60ce44284c5a25944b839be3c9264834, type: 3}
+  ballPrefab: {fileID: 5719036258587782965, guid: bc8b2777859c4cb47bac050f7b85a7d3, type: 3}
