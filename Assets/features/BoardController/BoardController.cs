@@ -7,6 +7,7 @@ public partial class BoardController : AbstractBoardController {
   [SerializeField] private AbstractWall wall;
   [SerializeField] private AbstractBlock block;
   [SerializeField] private AbstractBall ball;
+  [SerializeField] private AbstractPlayer player;
 
   private GameObject boardHolder;
   private readonly float wallWidth = 0.1f;
@@ -20,6 +21,7 @@ public partial class BoardController : AbstractBoardController {
     InitBounds(boardHolder.transform);
     InitBlocks(boardHolder.transform);
     InitBall(boardHolder.transform);
+    InitPlayer(boardHolder.transform);
   }
 
   private void InitBlocks(Transform parent) {
@@ -59,7 +61,13 @@ public partial class BoardController : AbstractBoardController {
   }
 
   private void InitBall(Transform parent) {
-    var ballInstance = Instantiate(ball, new(0, -9), Quaternion.identity);
+    AbstractBall ballInstance = Instantiate(ball, new(0, -9), Quaternion.identity);
     ballInstance.transform.SetParent(parent);
+    ballInstance.Launch(new(0, 600));
+  }
+
+  private void InitPlayer(Transform parent) {
+    AbstractPlayer playerInstance = Instantiate(player, new(-0.3f, -10), Quaternion.identity);
+    playerInstance.transform.SetParent(parent);
   }
 }

@@ -47,3 +47,4 @@ MonoBehaviour:
   wall: {fileID: 8398647790287896854, guid: 6e08cfda842c6b4428eda2966c1bb844, type: 3}
   block: {fileID: 1793518328070472800, guid: 9384cf7172797c8408821fcaa3297c2a, type: 3}
   ball: {fileID: 5719036258587782965, guid: bc8b2777859c4cb47bac050f7b85a7d3, type: 3}
+  player: {fileID: 8477006015057512989, guid: 60ce44284c5a25944b839be3c9264834, type: 3}
