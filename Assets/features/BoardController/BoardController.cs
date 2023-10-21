@@ -6,8 +6,8 @@ using UnityEngine;
 public partial class BoardController : AbstractBoardController {
   [SerializeField] private AbstractWall wall;
   [SerializeField] private AbstractBlock block;
-  [SerializeField] private AbstractBall ball;
-  [SerializeField] private AbstractPlayer player;
+  [SerializeField] private AbstractPlayerController playerController;
+  [SerializeField] private AbstractBallsDestroyer ballsDestroyer;
 
   private GameObject boardHolder;
   private readonly float wallWidth = 0.1f;
@@ -20,7 +20,6 @@ public partial class BoardController : AbstractBoardController {
 
     InitBounds(boardHolder.transform);
     InitBlocks(boardHolder.transform);
-    InitBall(boardHolder.transform);
     InitPlayer(boardHolder.transform);
   }
 
@@ -55,19 +54,14 @@ public partial class BoardController : AbstractBoardController {
     topWall.SetSize(((GameConfig.CameraWidthUnits * 2) + 2 * wallWidth, wallWidth));
     topWall.transform.SetParent(parent);
 
-    AbstractWall BottomWall = Instantiate(wall, -topWallPos, Quaternion.identity);
-    BottomWall.SetSize(((GameConfig.CameraWidthUnits * 2) + 2 * wallWidth, wallWidth));
-    BottomWall.transform.SetParent(parent);
-  }
-
-  private void InitBall(Transform parent) {
-    AbstractBall ballInstance = Instantiate(ball, new(0, -9), Quaternion.identity);
-    ballInstance.transform.SetParent(parent);
-    ballInstance.Launch(new(0, 600));
+    AbstractBallsDestroyer bottomWall = Instantiate(ballsDestroyer, -topWallPos - new Vector2(0, 1), Quaternion.identity);
+    bottomWall.SetSize(((GameConfig.CameraWidthUnits * 2) + 2 * wallWidth + 2, 1));
+    bottomWall.transform.SetParent(parent);
   }
 
   private void InitPlayer(Transform parent) {
-    AbstractPlayer playerInstance = Instantiate(player, new(-0.3f, -10), Quaternion.identity);
-    playerInstance.transform.SetParent(parent);
+    AbstractPlayerController playerControllerInstance = Instantiate(playerController, new(-0.3f, -10), Quaternion.identity);
+    playerControllerInstance.transform.SetParent(parent);
+    playerControllerInstance.SubscribeBallsEnd(() => playerControllerInstance.AddBalls(1));
   }
 }
