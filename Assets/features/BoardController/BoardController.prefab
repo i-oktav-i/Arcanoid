@@ -46,5 +46,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wall: {fileID: 8398647790287896854, guid: 6e08cfda842c6b4428eda2966c1bb844, type: 3}
   block: {fileID: 1793518328070472800, guid: 9384cf7172797c8408821fcaa3297c2a, type: 3}
-  playerController: {fileID: 5729123848603483345, guid: 189f9105c91f8ab4e948fb1ca8043ece, type: 3}
+  playerController: {fileID: -5003566081903972780, guid: 189f9105c91f8ab4e948fb1ca8043ece, type: 3}
   ballsDestroyer: {fileID: 3690429360544256261, guid: f1059c5942aada64bb927ade0503e60f, type: 3}

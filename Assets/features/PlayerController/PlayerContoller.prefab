@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6438039211201425179}
-  - component: {fileID: 5729123848603483345}
+  - component: {fileID: -5003566081903972780}
   m_Layer: 0
   m_Name: PlayerContoller
   m_TagString: Untagged
@@ -26,13 +26,13 @@ Transform:
   m_GameObject: {fileID: 1573577594778505336}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5729123848603483345
+--- !u!114 &-5003566081903972780
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -44,5 +44,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b5ce612b3fa0c54f8f65a4331dcb3ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerPrefab: {fileID: 8477006015057512989, guid: 60ce44284c5a25944b839be3c9264834, type: 3}
+  playerPrefab: {fileID: -3113447223175375052, guid: ef6c80f56dd9cab4e9129755f0eab17f, type: 3}
   ballPrefab: {fileID: 5719036258587782965, guid: bc8b2777859c4cb47bac050f7b85a7d3, type: 3}
