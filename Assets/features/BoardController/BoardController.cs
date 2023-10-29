@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public partial class BoardController : AbstractBoardController {
   [SerializeField] private AbstractWall wall;
@@ -12,30 +14,57 @@ public partial class BoardController : AbstractBoardController {
   private GameObject boardHolder;
   private readonly float wallWidth = 0.1f;
 
-  public override void InitBoard((int width, int height) size, Vector2 position) {
+  private readonly int rows = 6;
+  private readonly int columns = 10;
+
+  private readonly int blocksCount = 30;
+  private readonly int chanceCoefficient = 15;
+
+  private List<Action> levelCompleteCallbacks = new();
+  private List<Action> levelLoseCallbacks = new();
+
+  private bool isDestroy = false;
+
+  public int currentBlocksCount = 0;
+  public int CurrentBlocksCount {
+    get => currentBlocksCount;
+    set {
+      currentBlocksCount = value;
+
+      if (value == 0) RunCallbacks(levelCompleteCallbacks);
+    }
+  }
+
+  public override void InitBoard(Vector2 position, int level) {
     if (boardHolder) Destroy(boardHolder);
 
     boardHolder = new("Board");
     boardHolder.transform.position = position;
 
     InitBounds(boardHolder.transform);
-    InitBlocks(boardHolder.transform);
+    InitBlocks(boardHolder.transform, level);
     InitPlayer(boardHolder.transform);
   }
 
-  private void InitBlocks(Transform parent) {
-    Config config = BoardConfig.GetConfig();
+  private void InitBlocks(Transform parent, int level) {
+    Random.InitState(level);
+    List<Vector2> boardPositions = GetBoardPositions();
+    List<int> blocksHits = GetBlocksHits(level, 4);
 
-    Action<Vector2> getInit(int points) => (Vector2 vector) => {
-      AbstractBlock blockInstance = Instantiate(block, vector, Quaternion.identity);
-      blockInstance.transform.SetParent(parent);
-      blockInstance.SetHitPoints(points);
-    };
+    currentBlocksCount = blocksCount;
 
-    config.blueBlocksPositions.ForEach(getInit(1));
-    config.redBlocksPositions.ForEach(getInit(2));
-    config.greenBlocksPositions.ForEach(getInit(3));
-    config.yellowBlocksPositions.ForEach(getInit(4));
+    Enumerable
+      .Range(0, blocksCount)
+      .ToList()
+      .ForEach(index => {
+        int hits = blocksHits[index];
+        Vector2 position = boardPositions[index];
+
+        AbstractBlock blockInstance = Instantiate(block, position, Quaternion.identity);
+        blockInstance.transform.SetParent(parent);
+        blockInstance.SetHitPoints(hits);
+        blockInstance.SubscribeDestroy(() => CurrentBlocksCount -= 1);
+      });
   }
 
   private void InitBounds(Transform parent) {
@@ -62,6 +91,78 @@ public partial class BoardController : AbstractBoardController {
   private void InitPlayer(Transform parent) {
     AbstractPlayerController playerControllerInstance = Instantiate(playerController, new(-0.3f, -10), Quaternion.identity);
     playerControllerInstance.transform.SetParent(parent);
-    playerControllerInstance.SubscribeBallsEnd(() => playerControllerInstance.AddBalls(1));
+    playerControllerInstance.SubscribeBallsEnd(() => RunCallbacks(levelLoseCallbacks));
+  }
+
+
+  private int GetBLockHits(int level = 0, int maxHits = 0, int currentHits = 0) {
+    if (currentHits >= maxHits) return maxHits;
+
+    return GetIsUpperThreshold(level) ? GetBLockHits(level, maxHits, currentHits + 1) : currentHits;
+  }
+
+  private bool GetIsUpperThreshold(int level) {
+    int randomNumber = Random.Range(0, chanceCoefficient + level);
+
+    return randomNumber >= chanceCoefficient;
+  }
+
+  private List<Vector2> GetBoardPositions() {
+    Vector2 shift = new(0, 1.5f);
+
+    return RandomSort(
+      Enumerable
+        .Range(0, columns)
+        .Select(item => new Vector2(2 + (item - 5) * 2.5f, 0))
+        .SelectMany(vector => Enumerable
+          .Range(0, rows)
+          .Select(shiftScaler => vector + shiftScaler * shift)
+        )
+        .ToList()
+    );
+  }
+
+  private List<int> GetBlocksHits(int level, int maxHits) {
+    return Enumerable
+      .Range(0, blocksCount)
+      .Select(index => GetBLockHits(level, maxHits, 1))
+      .ToList();
+  }
+
+  private static List<T> RandomSort<T>(List<T> list) {
+    List<T> newList = new(list);
+    newList.Sort(delegate (T l, T r) { return Random.Range(0f, 1f) > 0.5 ? 1 : -1; });
+
+    return newList;
+  }
+
+  public override Action SubscribeLevelComplete(Action callback) {
+    levelCompleteCallbacks.Add(callback);
+
+    return () => levelCompleteCallbacks.Remove(callback);
+  }
+
+  public override void UnsubscribeLevelComplete(Action callback) {
+    levelCompleteCallbacks.Remove(callback);
+  }
+
+  public override Action SubscribeLevelLose(Action callback) {
+    levelLoseCallbacks.Add(callback);
+
+    return () => levelLoseCallbacks.Remove(callback);
+  }
+
+  public override void UnsubscribeLevelLose(Action callback) {
+    levelLoseCallbacks.Remove(callback);
+  }
+
+  private void RunCallbacks(List<Action> list) {
+    if (isDestroy) return;
+
+    list.ForEach(callback => callback());
+  }
+
+  private void OnDestroy() {
+    Destroy(boardHolder);
   }
 }

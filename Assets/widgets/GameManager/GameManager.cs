@@ -3,11 +3,41 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour {
-  [SerializeField] private AbstractBackgroundController backgroundController;
-  [SerializeField] private AbstractBoardController boardController;
+  [SerializeField] private AbstractBackgroundController backgroundControllerPrefab;
+  [SerializeField] private AbstractBoardController boardControllerPrefab;
+
+  private GameObject boardControllerHolder;
+  private AbstractBackgroundController backgroundController;
+  private int level = 1;
+
+  public int Level {
+    get => level;
+    set {
+      level = value;
+      InitLevel(value);
+    }
+  }
 
   private void Start() {
-    Instantiate(backgroundController);
-    Instantiate(boardController).InitBoard((400, 300), new(0, 0));
+    backgroundController = Instantiate(backgroundControllerPrefab);
+    InitLevel(level);
+  }
+
+  private void InitLevel(int level) {
+    backgroundController.SetBackground(level - 1);
+
+    Destroy(boardControllerHolder);
+    boardControllerHolder = new("BoardController");
+
+    AbstractBoardController boardController = Instantiate(boardControllerPrefab);
+    boardController.InitBoard(new(0, 0), level);
+    boardController.SubscribeLevelComplete(() => Level += 1);
+    boardController.SubscribeLevelLose(() => Level += 0);
+
+    boardController.transform.SetParent(boardControllerHolder.transform);
+  }
+
+  private void OnDestroy() {
+    Destroy(boardControllerHolder);
   }
 }

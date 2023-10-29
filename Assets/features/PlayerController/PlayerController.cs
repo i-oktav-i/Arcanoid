@@ -13,13 +13,15 @@ public class PlayerController : AbstractPlayerController {
   private bool blockInput = false;
   private List<Action> ballsEndCallbacks = new();
 
+  private bool isDestroy = false;
+
   public int BallsCount {
     get => ballsCount; set {
       ballsCount = value;
 
       if (value > 0 || notLaunchedBalls > 0) return;
 
-      ballsEndCallbacks.ForEach(item => item());
+      OnBallsEnd();
     }
   }
 
@@ -71,4 +73,12 @@ public class PlayerController : AbstractPlayerController {
   override public void UnsubscribeBallsEnd(Action callback) {
     ballsEndCallbacks.Remove(callback);
   }
+
+  private void OnBallsEnd() {
+    if (isDestroy) return;
+
+    ballsEndCallbacks.ForEach(callback => callback());
+  }
+
+  private void OnDestroy() => isDestroy = true;
 }

@@ -229,8 +229,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38f27e7d10bd6bb449296ca809e1b4c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  backgroundController: {fileID: 3439398608610969949, guid: 77e4c2f0aca33e045aef14bc4ffeed7c, type: 3}
-  boardController: {fileID: 4692262327669612628, guid: e96d62da9f3ae1b4480108a44b15b882, type: 3}
+  backgroundControllerPrefab: {fileID: 3439398608610969949, guid: 77e4c2f0aca33e045aef14bc4ffeed7c, type: 3}
+  boardControllerPrefab: {fileID: 4692262327669612628, guid: e96d62da9f3ae1b4480108a44b15b882, type: 3}
 --- !u!114 &7560693573043093643
 MonoBehaviour:
   m_ObjectHideFlags: 0
