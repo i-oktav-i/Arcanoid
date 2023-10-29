@@ -10,8 +10,6 @@ public class PlayerController : AbstractPlayerController {
   private AbstractBall spawnedBall;
   private int notLaunchedBalls = 1;
   private int ballsCount = 0;
-
-
   private bool blockInput = false;
   private List<Action> ballsEndCallbacks = new();
 

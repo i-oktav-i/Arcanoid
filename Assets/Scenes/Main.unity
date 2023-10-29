@@ -243,13 +243,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffc615f6bea962f4e885a1aaabee03f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DefaultResolution: {x: 1080, y: 1920}
-  WidthOrHeight: 0
-  componentCamera: {fileID: 0}
-  initialSize: 0
-  targetAspect: 0
-  initialFov: 0
-  horizontalFov: 120
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
