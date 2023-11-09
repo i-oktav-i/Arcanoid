@@ -6,7 +6,7 @@ MonoImporter:
   defaultReferences:
   - backgroundControllerPrefab: {instanceID: 0}
   - boardControllerPrefab: {instanceID: 0}
-  - gameData: {instanceID: 0}
+  - gameData: {fileID: 11400000, guid: fa19b9d67d99a4a489fb4f585104d338, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

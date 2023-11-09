@@ -18,8 +18,19 @@ public class GameManager : MonoBehaviour {
     }
   }
 
+  public GameDataScript gameData;
+
+  static bool _gameStarted; // false by default
+
+  private void InitGameState() {
+    if (_gameStarted) return;
+    _gameStarted = true;
+    if (gameData.resetOnStart) gameData.Reset();
+  }
+
   private void Start() {
     backgroundController = Instantiate(backgroundControllerPrefab);
+    InitGameState();
     InitLevel(level);
   }
 
