@@ -48,3 +48,5 @@ MonoBehaviour:
   block: {fileID: 1793518328070472800, guid: 9384cf7172797c8408821fcaa3297c2a, type: 3}
   playerController: {fileID: -5003566081903972780, guid: 189f9105c91f8ab4e948fb1ca8043ece, type: 3}
   ballsDestroyer: {fileID: 3690429360544256261, guid: f1059c5942aada64bb927ade0503e60f, type: 3}
+  gameData: {fileID: 11400000, guid: fa19b9d67d99a4a489fb4f585104d338, type: 2}
+  currentBlocksCount: 0

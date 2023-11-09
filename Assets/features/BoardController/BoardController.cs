@@ -25,6 +25,8 @@ public partial class BoardController : AbstractBoardController {
 
   private bool isDestroy = false;
 
+  public GameDataScript gameData;
+
   public int currentBlocksCount = 0;
   public int CurrentBlocksCount {
     get => currentBlocksCount;
@@ -63,7 +65,11 @@ public partial class BoardController : AbstractBoardController {
         AbstractBlock blockInstance = Instantiate(block, position, Quaternion.identity);
         blockInstance.transform.SetParent(parent);
         blockInstance.SetHitPoints(hits);
-        blockInstance.SubscribeDestroy(() => CurrentBlocksCount -= 1);
+        blockInstance.SubscribeDestroy(() => {
+          // TODO: find out "true way" of keeping const resources in unity projects
+          gameData.points += gameData.pointsPerBlockDestruction;
+          CurrentBlocksCount -= 1;
+        });
       });
   }
 
