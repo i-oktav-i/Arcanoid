@@ -9,18 +9,17 @@ public class LevelBackgroundController : AbstractBackgroundController {
   [SerializeField] private AbstractBackgroundRenderer backgroundRenderer;
   private AbstractBackgroundRenderer backgroundRendererInstance;
 
-
-  private readonly int initialBackgroundIndex = 0;
-
   private void Awake() {
     backgroundRendererInstance = Instantiate(backgroundRenderer);
   }
 
-  private void Start() {
-    SetBackground(initialBackgroundIndex);
-  }
+  // private readonly int initialBackgroundIndex = 0;
+  // private void Start() {
+  //   SetBackground(initialBackgroundIndex);
+  // }
 
   override public void SetBackground(int index) {
+    Debug.Log(backgrounds[index]);
     backgroundRendererInstance.SetBackgroundSprite(backgrounds[index]);
   }
 }

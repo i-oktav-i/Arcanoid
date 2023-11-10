@@ -66,8 +66,7 @@ public partial class BoardController : AbstractBoardController {
         blockInstance.transform.SetParent(parent);
         blockInstance.SetHitPoints(hits);
         blockInstance.SubscribeDestroy(() => {
-          // TODO: find out "true way" of keeping const resources in unity projects
-          gameData.points += InitialGameState.pointsPerBlockDestruction;
+          gameData.points += InitialGameState.PointsPerBlockDestruction;
           CurrentBlocksCount -= 1;
         });
       });
