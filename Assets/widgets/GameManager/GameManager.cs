@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
   [SerializeField] private AbstractBackgroundController backgroundControllerPrefab;
@@ -8,15 +9,6 @@ public class GameManager : MonoBehaviour {
 
   private GameObject boardControllerHolder;
   private AbstractBackgroundController backgroundController;
-  private int level = 1;
-
-  public int Level {
-    get => level;
-    set {
-      level = value;
-      InitLevel(value);
-    }
-  }
 
   public GameDataScript gameData;
 
@@ -29,12 +21,16 @@ public class GameManager : MonoBehaviour {
   }
 
   private void Start() {
+    Cursor.visible = false;
     backgroundController = Instantiate(backgroundControllerPrefab);
     InitGameState();
-    InitLevel(level);
+    InitLevel(gameData.level);
+    gameData.SubscribeLevelChange(() => InitLevel(gameData.level));
   }
 
   private void InitLevel(int level) {
+    Debug.Log($"Initializing level {level}...");
+
     backgroundController.SetBackground(level - 1);
 
     Destroy(boardControllerHolder);
@@ -42,10 +38,15 @@ public class GameManager : MonoBehaviour {
 
     AbstractBoardController boardController = Instantiate(boardControllerPrefab);
     boardController.InitBoard(new(0, 0), level);
-    boardController.SubscribeLevelComplete(() => Level += 1);
-    boardController.SubscribeLevelLose(() => Level += 0);
+    boardController.SubscribeLevelComplete(() => {
+      if (gameData.level < LevelsConfig.MaxLevel) gameData.level += 1;
+      SceneManager.LoadScene("Main");
+    });
+    boardController.SubscribeLevelLose(() => gameData.level += 0);
 
     boardController.transform.SetParent(boardControllerHolder.transform);
+
+    Debug.Log($"Level {level} initialization complete!");
   }
 
   private void OnDestroy() {

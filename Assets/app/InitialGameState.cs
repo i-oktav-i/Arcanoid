@@ -2,9 +2,9 @@
 
 static class InitialGameState {
 
-  public static readonly int pointsPerBlockDestruction = 1;
-  public static readonly int level = 1;
-  public static readonly int ballsCnt = 6;
-  public static readonly int points = 0;
+  public const int PointsPerBlockDestruction = 1;
+  public const int Level = 1;
+  public const int BallsCnt = 6;
+  public const int Points = 0;
 
 }
