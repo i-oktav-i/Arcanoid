@@ -231,6 +231,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   backgroundControllerPrefab: {fileID: 3439398608610969949, guid: 77e4c2f0aca33e045aef14bc4ffeed7c, type: 3}
   boardControllerPrefab: {fileID: 4692262327669612628, guid: e96d62da9f3ae1b4480108a44b15b882, type: 3}
+  gameData: {fileID: 11400000, guid: fa19b9d67d99a4a489fb4f585104d338, type: 2}
 --- !u!114 &7560693573043093643
 MonoBehaviour:
   m_ObjectHideFlags: 0
