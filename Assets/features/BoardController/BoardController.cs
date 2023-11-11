@@ -88,7 +88,7 @@ public partial class BoardController : AbstractBoardController {
            CurrentBlocksCount -= 1;
            if (gameData.IsSoundOn) {
              if (gameData.pointsToBall >= gameData.requiredPointsToBall)
-               _ = PlayBonusBallSound(audioSrc, blockInstance.SoundOnDestroy);
+               StartCoroutine(PlayBonusBallSound(audioSrc, blockInstance.SoundOnDestroy));
              else
               audioSrc.PlayOneShot(blockInstance.SoundOnDestroy,  SoundConfig.SFXVolumeScale);
            }
