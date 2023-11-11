@@ -20,15 +20,4 @@ public class GameDataScript : ScriptableObject {
     balls = InitialGameState.BallsCnt;
     points = InitialGameState.Points;
   }
-
-  private List<Action> levelChangeCallbacks = new();
-
-  public Action SubscribeLevelChange(Action callback) {
-    levelChangeCallbacks.Add(callback);
-    return () => levelChangeCallbacks.Remove(callback);
-  }
-
-  public void UnsubscribeLevelChange(Action callback) {
-    levelChangeCallbacks.Remove(callback);
-  }
 }
