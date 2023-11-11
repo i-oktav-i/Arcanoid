@@ -14,18 +14,17 @@ public partial class BoardController : AbstractBoardController {
   private GameObject boardHolder;
   private readonly float wallWidth = 0.1f;
 
-  private readonly int rows = 6;
-  private readonly int columns = 10;
+  private readonly int rows = BoardConfig.Rows;
+  private readonly int columns = BoardConfig.Columns;
 
-  private readonly int blocksCount = 30;
-  private readonly int chanceCoefficient = 15;
-
-  private List<Action> blocksEndCallbacks = new();
+  private readonly int blocksCount = BoardConfig.BlocksCount;
+  private readonly int chanceCoefficient = BoardConfig.ChanceCoefficient;
 
   private bool isDestroy = false;
 
   public GameState gameData;
 
+  private List<Action> blocksEndCallbacks = new();
 
   private int currentBlocksCount = 0;
   public int CurrentBlocksCount {
@@ -122,7 +121,6 @@ public partial class BoardController : AbstractBoardController {
     // playerControllerInstance.SubscribeBallsEnd(() => RunCallbacks(levelLoseCallbacks));
   }
 
-
   private int GetBLockHits(int level = 0, int maxHits = 0, int currentHits = 0) {
     if (currentHits >= maxHits) return maxHits;
 
@@ -172,16 +170,6 @@ public partial class BoardController : AbstractBoardController {
   public override void UnsubscribeBlocksEnd(Action callback) {
     blocksEndCallbacks.Remove(callback);
   }
-
-  // public override Action SubscribeLevelLose(Action callback) {
-  //   levelLoseCallbacks.Add(callback);
-  //
-  //   return () => levelLoseCallbacks.Remove(callback);
-  // }
-  //
-  // public override void UnsubscribeLevelLose(Action callback) {
-  //   levelLoseCallbacks.Remove(callback);
-  // }
 
   private void RunCallbacks(List<Action> list) {
     if (isDestroy) return;
