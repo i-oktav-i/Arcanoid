@@ -36,10 +36,8 @@ public partial class BoardController : AbstractBoardController {
   }
 
   private void SetMusic() {
-    if (gameData.music)
-      audioSrc.Play();
-    else
-      audioSrc.Stop();
+    if (gameData.IsMusicOn) audioSrc.Play();
+    else audioSrc.Stop();
   }
 
   AudioSource audioSrc;
@@ -47,6 +45,7 @@ public partial class BoardController : AbstractBoardController {
   private void Start() {
     audioSrc = Camera.main.GetComponent<AudioSource>();
     SetMusic();
+    gameData.SubscribeMusicSwitch(SetMusic);
   }
 
   public override void InitBoard(Vector2 position, int level) {
@@ -58,15 +57,6 @@ public partial class BoardController : AbstractBoardController {
     InitBounds(boardHolder.transform);
     InitBlocks(boardHolder.transform, level);
     InitPlayer(boardHolder.transform);
-  }
-
-  // TODO: move to player input controller all such pieces maybe
-  private void Update() {
-    if (Input.GetKeyDown(KeyCode.M)) {
-      gameData.music = !gameData.music;
-      SetMusic();
-    }
-    if (Input.GetKeyDown(KeyCode.S)) gameData.sound = !gameData.sound;
   }
 
   private void InitBlocks(Transform parent, int level) {
@@ -89,7 +79,7 @@ public partial class BoardController : AbstractBoardController {
         blockInstance.SubscribeDestroy(() => {
           gameData.points += InitialGameState.PointsPerBlockDestruction;
           CurrentBlocksCount -= 1;
-          if (gameData.sound) audioSrc.PlayOneShot(pointSound);
+          if (gameData.IsSoundOn) audioSrc.PlayOneShot(pointSound);
         });
       });
   }

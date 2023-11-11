@@ -14,15 +14,45 @@ public class GameState : ScriptableObject {
   public int points = InitialGameState.Points;
 
   public bool resetOnStart;
-
-  public bool music = true;
-  public bool sound = true;
-
-  public void Reset()
-  {
+  public void Reset() {
     level = InitialGameState.Level;
     balls = InitialGameState.BallsCapacity;
     points = InitialGameState.Points;
+  }
+
+  // TODO: better to make separate sound manager
+  public bool music = true;
+  public bool IsMusicOn {
+    get => music;
+    set {
+      music = value;
+      musicSwitchCallbacks.ForEach(callback => callback());
+    }
+  }
+  private List<Action> musicSwitchCallbacks = new();
+  public Action SubscribeMusicSwitch(Action callback) {
+    musicSwitchCallbacks.Add(callback);
+    return () => musicSwitchCallbacks.Remove(callback);
+  }
+  public void UnsubscribeMusicSwitch(Action callback) {
+    musicSwitchCallbacks.Remove(callback);
+  }
+
+  public bool sound = true;
+  public bool IsSoundOn {
+    get => sound;
+    set {
+      sound = value;
+      soundSwitchCallbacks.ForEach(callback => callback());
+    }
+  }
+  private List<Action> soundSwitchCallbacks = new();
+  public Action SubscribeSoundSwitch(Action callback) {
+    soundSwitchCallbacks.Add(callback);
+    return () => soundSwitchCallbacks.Remove(callback);
+  }
+  public void UnsubscribeSoundSwitch(Action callback) {
+    soundSwitchCallbacks.Remove(callback);
   }
 
   public int BallsCapacity {
