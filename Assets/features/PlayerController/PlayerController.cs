@@ -10,42 +10,30 @@ public class PlayerController : AbstractPlayerController {
   [SerializeField] private AbstractBall ballPrefab;
 
   private List<AbstractBall> ballsMag = new();
-  private int releasedBallsCnt = 0;
 
   private bool blockInput = false;
-  private List<Action> ballsEndCallbacks = new();
 
-  public GameDataScript gameData;
+  public GameState gameData;
 
   private bool isDestroy = false;
+  private void OnDestroy() => isDestroy = true;
 
-  private int AmmoCnt {
+  private int AmmoCount {
     get => ballsMag.Count;
   }
 
-  private int BallsCapacity {
-    get => gameData.balls;
-    set {
-      gameData.balls = value;
+  private int releasedBallsCnt = 0;
 
-      if (value > 0) return;
-
-      OnBallsEnd();
-    }
-  }
-
-  public override void AddBalls(int ballsRequested) {
+  public override void FillBallsMag() {
     if (isDestroy) return;
-    var ballsToSpawn = Math.Min(ballsRequested, InitialGameState.BallsCnt);
-    for (int i = 0; i < ballsToSpawn; i++) {
-      SpawnBall();
-    }
+    var ballsToSpawn = Math.Min(InitialGameState.BallsMagCapacity, gameData.BallsCapacity);
+    for (int i = 0; i < ballsToSpawn; i++) SpawnBall();
   }
 
   private void Awake() {
     player = Instantiate(playerPrefab, transform.position, Quaternion.identity);
     player.transform.SetParent(transform);
-    AddBalls(InitialGameState.BallsMag);
+    FillBallsMag();
   }
 
   private void SpawnBall() {
@@ -54,22 +42,15 @@ public class PlayerController : AbstractPlayerController {
 
     ballsMag.Add(newBall);
     _ = newBall.SubscribeDestroy(() => {
-      BallsCapacity--;
+      if (isDestroy) return;
+      gameData.BallsCapacity--;
       releasedBallsCnt--;
-      // TODO: add check if all blocks have been destroyed -
-      if (BallsCapacity <= 0) {
-        gameData.Reset();
-        SceneManager.LoadScene("Main");
-        return;
-      }
-      if (releasedBallsCnt <= 0) {
-        AddBalls(InitialGameState.BallsMag);
-      }
+      if (releasedBallsCnt <= 0) FillBallsMag();
     });
   }
 
   private void Update() {
-    if (!blockInput && Input.GetKeyDown(KeyCode.Space) && AmmoCnt > 0) {
+    if (!blockInput && Input.GetKeyDown(KeyCode.Space) && AmmoCount > 0) {
       blockInput = true;
 
       var ball = ballsMag[0];
@@ -84,20 +65,17 @@ public class PlayerController : AbstractPlayerController {
     }
   }
 
-   public override Action SubscribeBallsEnd(Action callback) {
-    ballsEndCallbacks.Add(callback);
-
-    return () => ballsEndCallbacks.Remove(callback);
-  }
-  public override void UnsubscribeBallsEnd(Action callback) {
-    ballsEndCallbacks.Remove(callback);
-  }
-
-  private void OnBallsEnd() {
-    if (isDestroy) return;
-
-    ballsEndCallbacks.ForEach(callback => callback());
-  }
-
-  private void OnDestroy() => isDestroy = true;
+  //  public override Action SubscribeBallsEnd(Action callback) {
+  //   ballsEndCallbacks.Add(callback);
+  //
+  //   return () => ballsEndCallbacks.Remove(callback);
+  // }
+  // public override void UnsubscribeBallsEnd(Action callback) {
+  //   ballsEndCallbacks.Remove(callback);
+  // }
+  // private void OnBallsEnd() {
+  //   if (isDestroy) return;
+  //
+  //   ballsEndCallbacks.ForEach(callback => callback());
+  // }
 }

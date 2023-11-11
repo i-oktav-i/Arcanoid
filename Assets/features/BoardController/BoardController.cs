@@ -20,28 +20,34 @@ public partial class BoardController : AbstractBoardController {
   private readonly int blocksCount = 30;
   private readonly int chanceCoefficient = 15;
 
-  private List<Action> levelCompleteCallbacks = new();
-  private List<Action> levelLoseCallbacks = new();
+  private List<Action> blocksEndCallbacks = new();
 
   private bool isDestroy = false;
 
-  public GameDataScript gameData;
+  public GameState gameData;
 
 
-  public int currentBlocksCount = 0;
+  private int currentBlocksCount = 0;
   public int CurrentBlocksCount {
     get => currentBlocksCount;
     set {
       currentBlocksCount = value;
-
-      if (value == 0) RunCallbacks(levelCompleteCallbacks);
+      if (value == 0) RunCallbacks(blocksEndCallbacks);
     }
+  }
+
+  private void SetMusic() {
+    if (gameData.music)
+      audioSrc.Play();
+    else
+      audioSrc.Stop();
   }
 
   AudioSource audioSrc;
   public AudioClip pointSound;
   private void Start() {
     audioSrc = Camera.main.GetComponent<AudioSource>();
+    SetMusic();
   }
 
   public override void InitBoard(Vector2 position, int level) {
@@ -53,6 +59,15 @@ public partial class BoardController : AbstractBoardController {
     InitBounds(boardHolder.transform);
     InitBlocks(boardHolder.transform, level);
     InitPlayer(boardHolder.transform);
+  }
+
+  // TODO: move to player input controller all such pieces maybe
+  private void Update() {
+    if (Input.GetKeyDown(KeyCode.M)) {
+      gameData.music = !gameData.music;
+      SetMusic();
+    }
+    if (Input.GetKeyDown(KeyCode.S)) gameData.sound = !gameData.sound;
   }
 
   private void InitBlocks(Transform parent, int level) {
@@ -75,7 +90,7 @@ public partial class BoardController : AbstractBoardController {
         blockInstance.SubscribeDestroy(() => {
           gameData.points += InitialGameState.PointsPerBlockDestruction;
           CurrentBlocksCount -= 1;
-          audioSrc.PlayOneShot(pointSound);
+          if (gameData.sound) audioSrc.PlayOneShot(pointSound);
         });
       });
   }
@@ -104,7 +119,7 @@ public partial class BoardController : AbstractBoardController {
   private void InitPlayer(Transform parent) {
     AbstractPlayerController playerControllerInstance = Instantiate(playerController, new(-0.3f, -10), Quaternion.identity);
     playerControllerInstance.transform.SetParent(parent);
-    playerControllerInstance.SubscribeBallsEnd(() => RunCallbacks(levelLoseCallbacks));
+    // playerControllerInstance.SubscribeBallsEnd(() => RunCallbacks(levelLoseCallbacks));
   }
 
 
@@ -149,25 +164,24 @@ public partial class BoardController : AbstractBoardController {
     return newList;
   }
 
-  public override Action SubscribeLevelComplete(Action callback) {
-    levelCompleteCallbacks.Add(callback);
-
-    return () => levelCompleteCallbacks.Remove(callback);
+  public override Action SubscribeBlocksEnd(Action callback) {
+    blocksEndCallbacks.Add(callback);
+    return () => blocksEndCallbacks.Remove(callback);
   }
 
-  public override void UnsubscribeLevelComplete(Action callback) {
-    levelCompleteCallbacks.Remove(callback);
+  public override void UnsubscribeBlocksEnd(Action callback) {
+    blocksEndCallbacks.Remove(callback);
   }
 
-  public override Action SubscribeLevelLose(Action callback) {
-    levelLoseCallbacks.Add(callback);
-
-    return () => levelLoseCallbacks.Remove(callback);
-  }
-
-  public override void UnsubscribeLevelLose(Action callback) {
-    levelLoseCallbacks.Remove(callback);
-  }
+  // public override Action SubscribeLevelLose(Action callback) {
+  //   levelLoseCallbacks.Add(callback);
+  //
+  //   return () => levelLoseCallbacks.Remove(callback);
+  // }
+  //
+  // public override void UnsubscribeLevelLose(Action callback) {
+  //   levelLoseCallbacks.Remove(callback);
+  // }
 
   private void RunCallbacks(List<Action> list) {
     if (isDestroy) return;
