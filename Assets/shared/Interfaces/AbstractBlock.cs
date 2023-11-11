@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 
 public abstract class AbstractBlock : MonoBehaviour {
+  protected int hitPoints = 1;
   public int points;
   public AudioClip SoundOnDestroy;
 

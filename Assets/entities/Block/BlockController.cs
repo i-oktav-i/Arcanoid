@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class BlockController : AbstractBlock {
-  private int hitPoints = 1;
   [SerializeField] private Sprite[] sprites;
   private SpriteRenderer spritRenderer;
 

@@ -46,6 +46,7 @@ public class PlayerController : AbstractPlayerController {
     var newBall = Instantiate(ballPrefab, player.transform.position + new Vector3(1.1f, 1.1f), Quaternion.identity);
     newBall.transform.SetParent(player.transform);
 
+    // TODO: move "no balls" case resolving to game manager
     newBall.SubscribeDestroy(() => {
       if (isDestroy) return;
       gameData.BallsCapacity--;
