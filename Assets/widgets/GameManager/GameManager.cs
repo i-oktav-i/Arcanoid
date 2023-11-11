@@ -25,10 +25,6 @@ public class GameManager : MonoBehaviour {
     backgroundController = Instantiate(backgroundControllerPrefab);
     InitGameState();
     InitLevel(gameData.level);
-    gameData.SubscribeLevelChange(() => {
-      Debug.Log("Hello from level change!");
-      InitLevel(gameData.level);
-    });
   }
 
   private void InitLevel(int level) {

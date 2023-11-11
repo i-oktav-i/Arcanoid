@@ -13,12 +13,7 @@ public class LevelBackgroundController : AbstractBackgroundController {
     backgroundRendererInstance = Instantiate(backgroundRenderer);
   }
 
-  // private readonly int initialBackgroundIndex = 0;
-  // private void Start() {
-  //   SetBackground(initialBackgroundIndex);
-  // }
-
-  override public void SetBackground(int index) {
+   public override void SetBackground(int index) {
     backgroundRendererInstance.SetBackgroundSprite(backgrounds[index]);
   }
 }
