@@ -50,3 +50,4 @@ MonoBehaviour:
   ballsDestroyer: {fileID: 3690429360544256261, guid: f1059c5942aada64bb927ade0503e60f, type: 3}
   gameData: {fileID: 11400000, guid: fa19b9d67d99a4a489fb4f585104d338, type: 2}
   currentBlocksCount: 0
+  pointSound: {fileID: 8300000, guid: 887977f0a873a9a4f94763b8790dd50b, type: 3}
