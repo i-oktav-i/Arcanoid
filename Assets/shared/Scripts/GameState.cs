@@ -13,11 +13,18 @@ public class GameState : ScriptableObject {
 
   public int points = InitialGameState.Points;
 
+  public int pointsToBall = 0;
+
   public bool resetOnStart;
   public void Reset() {
     level = InitialGameState.Level;
     balls = InitialGameState.BallsCapacity;
     points = InitialGameState.Points;
+    pointsToBall = InitialGameState.PointsToBall;
+  }
+
+  public int requiredPointsToBall {
+    get  => 400 + (level - 1) * 20;
   }
 
   // TODO: better to make separate sound manager

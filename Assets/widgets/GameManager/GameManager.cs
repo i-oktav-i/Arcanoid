@@ -34,6 +34,17 @@ public class GameManager : MonoBehaviour {
     if (Input.GetKeyDown(KeyCode.S)) gameData.IsSoundOn = !gameData.IsSoundOn;
   }
 
+  public void OnBlockDestroyed(AbstractBlock blockInstance)
+  {
+    gameData.points += blockInstance.points;
+    gameData.pointsToBall += blockInstance.points;
+    if (gameData.pointsToBall >= gameData.requiredPointsToBall) {
+      Debug.Log("Ball added to inventory");
+      gameData.BallsCapacity++;
+      gameData.pointsToBall -= gameData.requiredPointsToBall;
+    }
+  }
+
   private void InitLevel(int level) {
     Debug.Log($"Initializing level {level}...");
 
@@ -43,7 +54,7 @@ public class GameManager : MonoBehaviour {
     boardControllerHolder = new("BoardController");
 
     AbstractBoardController boardController = Instantiate(boardControllerPrefab);
-    boardController.InitBoard(new(0, 0), level);
+    boardController.InitBoard(new(0, 0), level, OnBlockDestroyed);
     boardController.SubscribeBlocksEnd(() => {
       Debug.Log($"Level {level} COMPLETE!");
       if (gameData.level < LevelsConfig.MaxLevel) gameData.level += 1;

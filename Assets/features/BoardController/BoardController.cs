@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Collections;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -12,7 +13,7 @@ public partial class BoardController : AbstractBoardController {
   [SerializeField] private AbstractBallsDestroyer ballsDestroyer;
 
   private GameObject boardHolder;
-  private readonly float wallWidth = 0.1f;
+  private readonly float wallWidth = BoardConfig.WallWidth;
 
   private readonly int rows = BoardConfig.Rows;
   private readonly int columns = BoardConfig.Columns;
@@ -41,25 +42,32 @@ public partial class BoardController : AbstractBoardController {
   }
 
   AudioSource audioSrc;
-  public AudioClip pointSound;
   private void Start() {
     audioSrc = Camera.main.GetComponent<AudioSource>();
     SetMusic();
     gameData.SubscribeMusicSwitch(SetMusic);
   }
 
-  public override void InitBoard(Vector2 position, int level) {
+  public override void InitBoard(Vector2 position, int level, Action<AbstractBlock> onBlockDestroyed) {
     if (boardHolder) Destroy(boardHolder);
 
     boardHolder = new("Board");
     boardHolder.transform.position = position;
 
     InitBounds(boardHolder.transform);
-    InitBlocks(boardHolder.transform, level);
+    InitBlocks(boardHolder.transform, level, onBlockDestroyed);
     InitPlayer(boardHolder.transform);
   }
 
-  private void InitBlocks(Transform parent, int level) {
+  // TODO make sound manager for such methods
+  IEnumerator PlayBonusBallSound(AudioSource audioSrc, AudioClip sound) {
+    for (int i = 0; i < 10; i++) {
+      yield return new WaitForSeconds(0.2f);
+      audioSrc.PlayOneShot(sound, SoundConfig.SFXVolumeScale);
+    }
+  }
+
+  private void InitBlocks(Transform parent, int level, Action<AbstractBlock> onBlockDestroyed) {
     Random.InitState(level);
     List<Vector2> boardPositions = GetBoardPositions();
     List<int> blocksHits = GetBlocksHits(level, 4);
@@ -77,9 +85,14 @@ public partial class BoardController : AbstractBoardController {
         blockInstance.transform.SetParent(parent);
         blockInstance.SetHitPoints(hits);
         blockInstance.SubscribeDestroy(() => {
-          gameData.points += InitialGameState.PointsPerBlockDestruction;
-          CurrentBlocksCount -= 1;
-          if (gameData.IsSoundOn) audioSrc.PlayOneShot(pointSound);
+           CurrentBlocksCount -= 1;
+           if (gameData.IsSoundOn) {
+             if (gameData.pointsToBall >= gameData.requiredPointsToBall)
+               _ = PlayBonusBallSound(audioSrc, blockInstance.SoundOnDestroy);
+             else
+              audioSrc.PlayOneShot(blockInstance.SoundOnDestroy,  SoundConfig.SFXVolumeScale);
+           }
+           onBlockDestroyed(blockInstance);
         });
       });
   }
