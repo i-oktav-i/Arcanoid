@@ -28,6 +28,12 @@ public class GameManager : MonoBehaviour {
     InitLevel(gameData.level);
   }
 
+  // TODO: move to input manager
+  private void Update() {
+    if (Input.GetKeyDown(KeyCode.M)) gameData.IsMusicOn = !gameData.IsMusicOn;
+    if (Input.GetKeyDown(KeyCode.S)) gameData.IsSoundOn = !gameData.IsSoundOn;
+  }
+
   private void InitLevel(int level) {
     Debug.Log($"Initializing level {level}...");
 
