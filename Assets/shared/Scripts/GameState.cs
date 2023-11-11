@@ -5,10 +5,11 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "GameData", menuName = "Game Data", order = 51)]
 public class GameState : ScriptableObject {
 
+  // left these as public so theyre shown in the inspector
   [Range(1, LevelsConfig.MaxLevel)]
   public int level = InitialGameState.Level;
 
-  private int balls = InitialGameState.BallsCapacity;
+  public int balls = InitialGameState.BallsCapacity;
 
   public int points = InitialGameState.Points;
 
@@ -28,7 +29,6 @@ public class GameState : ScriptableObject {
     get => balls;
     set {
       balls = value;
-      Debug.Log($"setting game state balls to {balls}");
       if (value > 0) return;
       OnBallsEnd();
     }
