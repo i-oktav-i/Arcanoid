@@ -57,7 +57,7 @@ public class PlayerController : AbstractPlayerController {
   }
 
   private void Update() {
-    if (!blockInput && Input.GetKeyDown(KeyCode.Space) && AmmoCount > 0) {
+    if (!blockInput && Input.GetButtonDown("Fire1") && AmmoCount > 0) {
       blockInput = true;
 
       var ball = ballsMag[0];

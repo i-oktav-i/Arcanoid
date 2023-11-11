@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Ball : AbstractBall {
   private new Rigidbody2D rigidbody;
@@ -17,6 +18,15 @@ public class Ball : AbstractBall {
     rigidbody = GetComponent<Rigidbody2D>();
   }
 
+  private void Update() {
+    if (!rigidbody.isKinematic && Input.GetKeyDown(KeyCode.J)) {
+      var v = rigidbody.velocity;
+      if (Random.Range(0,2) == 0) v.Set(v.x - 0.1f, v.y + 0.1f);
+      else v.Set(v.x + 0.1f, v.y - 0.1f);
+      rigidbody.velocity = v;
+    }
+  }
+
   private void OnCollisionEnter2D(Collision2D other) {
     AbstractBlock wall = other.gameObject.GetComponent<AbstractBlock>();
 
@@ -25,12 +35,12 @@ public class Ball : AbstractBall {
     wall.DealDamage();
   }
 
-  override public Action SubscribeDestroy(Action callback) {
+   public override Action SubscribeDestroy(Action callback) {
     destroyCallbacks.Add(callback);
 
     return () => destroyCallbacks.Remove(callback);
   }
-  override public void UnsubscribeDestroy(Action callback) {
+  public override void UnsubscribeDestroy(Action callback) {
     destroyCallbacks.Remove(callback);
   }
 

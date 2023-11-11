@@ -43,12 +43,12 @@ public class BlockController : AbstractBlock {
     transform.localScale = new(size.horizontal, size.vertical);
   }
 
-  override public Action SubscribeDestroy(Action callback) {
+  public override Action SubscribeDestroy(Action callback) {
     destroyCallbacks.Add(callback);
 
     return () => destroyCallbacks.Remove(callback);
   }
-  override public void UnsubscribeDestroy(Action callback) {
+  public override void UnsubscribeDestroy(Action callback) {
     destroyCallbacks.Remove(callback);
   }
 }
