@@ -23,6 +23,24 @@ public class GameState : ScriptableObject {
     pointsToBall = InitialGameState.PointsToBall;
   }
 
+  public void Save() {
+    PlayerPrefs.SetInt("level", level);
+    PlayerPrefs.SetInt("balls", balls);
+    PlayerPrefs.SetInt("points", points);
+    PlayerPrefs.SetInt("pointsToBall", pointsToBall);
+    PlayerPrefs.SetInt("music", music ? 1 : 0);
+    PlayerPrefs.SetInt("sound", sound ? 1 : 0);
+  }
+
+  public void Load() {
+    level = PlayerPrefs.GetInt("level", 1);
+    balls = PlayerPrefs.GetInt("balls", 6);
+    points = PlayerPrefs.GetInt("points", 0);
+    pointsToBall = PlayerPrefs.GetInt("pointsToBall", 0);
+    music = PlayerPrefs.GetInt("music", 1) == 1;
+    sound = PlayerPrefs.GetInt("sound", 1) == 1;
+  }
+
   public int requiredPointsToBall {
     get  => 400 + (level - 1) * 20;
   }
