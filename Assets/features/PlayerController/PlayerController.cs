@@ -56,6 +56,7 @@ public class PlayerController : AbstractPlayerController {
     _ = newBall.SubscribeDestroy(() => {
       BallsCapacity--;
       releasedBallsCnt--;
+      // TODO: add check if all blocks have been destroyed -
       if (BallsCapacity <= 0) {
         gameData.Reset();
         SceneManager.LoadScene("Main");
