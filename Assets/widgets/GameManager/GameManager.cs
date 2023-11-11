@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -10,7 +11,7 @@ public class GameManager : MonoBehaviour {
   private GameObject boardControllerHolder;
   private AbstractBackgroundController backgroundController;
 
-  public GameDataScript gameData;
+  public GameState gameData;
 
   static bool _gameStarted; // false by default
 
@@ -37,11 +38,16 @@ public class GameManager : MonoBehaviour {
 
     AbstractBoardController boardController = Instantiate(boardControllerPrefab);
     boardController.InitBoard(new(0, 0), level);
-    boardController.SubscribeLevelComplete(() => {
+    boardController.SubscribeBlocksEnd(() => {
+      Debug.Log($"Level {level} COMPLETE!");
       if (gameData.level < LevelsConfig.MaxLevel) gameData.level += 1;
       SceneManager.LoadScene("Main");
     });
-    boardController.SubscribeLevelLose(() => gameData.level += 0);
+    gameData.SubscribeBallsEnd(() => {
+      Debug.Log($"Level {level} lose.");
+      gameData.Reset();
+      SceneManager.LoadScene("Main");
+    });
 
     boardController.transform.SetParent(boardControllerHolder.transform);
 
@@ -59,7 +65,7 @@ public class GameManager : MonoBehaviour {
       string.Format(
         "<color=yellow><size=30>Level <b>{0}</b> Balls <b>{1}</b>"+
         " Score <b>{2}</b></size></color>",
-        gameData.level, gameData.balls, gameData.points
+        gameData.level, gameData.BallsCapacity, gameData.points
         ));
   }
 }
