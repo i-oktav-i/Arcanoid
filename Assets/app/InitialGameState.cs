@@ -7,4 +7,6 @@ static class InitialGameState {
   public const int BallsCnt = 6;
   public const int Points = 0;
 
+
+  public const int BallsMag = 2;
 }
