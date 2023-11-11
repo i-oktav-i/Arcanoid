@@ -27,6 +27,7 @@ public partial class BoardController : AbstractBoardController {
 
   public GameDataScript gameData;
 
+
   public int currentBlocksCount = 0;
   public int CurrentBlocksCount {
     get => currentBlocksCount;
@@ -35,6 +36,12 @@ public partial class BoardController : AbstractBoardController {
 
       if (value == 0) RunCallbacks(levelCompleteCallbacks);
     }
+  }
+
+  AudioSource audioSrc;
+  public AudioClip pointSound;
+  private void Start() {
+    audioSrc = Camera.main.GetComponent<AudioSource>();
   }
 
   public override void InitBoard(Vector2 position, int level) {
@@ -68,6 +75,7 @@ public partial class BoardController : AbstractBoardController {
         blockInstance.SubscribeDestroy(() => {
           gameData.points += InitialGameState.PointsPerBlockDestruction;
           CurrentBlocksCount -= 1;
+          audioSrc.PlayOneShot(pointSound);
         });
       });
   }
