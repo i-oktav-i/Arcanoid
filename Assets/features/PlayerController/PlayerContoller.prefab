@@ -46,3 +46,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerPrefab: {fileID: -3113447223175375052, guid: ef6c80f56dd9cab4e9129755f0eab17f, type: 3}
   ballPrefab: {fileID: 5719036258587782965, guid: bc8b2777859c4cb47bac050f7b85a7d3, type: 3}
+  gameData: {fileID: 11400000, guid: fa19b9d67d99a4a489fb4f585104d338, type: 2}

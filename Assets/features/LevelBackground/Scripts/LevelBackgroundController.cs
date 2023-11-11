@@ -19,7 +19,6 @@ public class LevelBackgroundController : AbstractBackgroundController {
   // }
 
   override public void SetBackground(int index) {
-    Debug.Log(backgrounds[index]);
     backgroundRendererInstance.SetBackgroundSprite(backgrounds[index]);
   }
 }
