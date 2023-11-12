@@ -22,6 +22,10 @@ public class GameState : ScriptableObject {
   public float musicVolume = 1f;
   [FormerlySerializedAs("soundVolume")] public float sfxVolume = 10f;
 
+  public float SfxVolume {
+    get => sfxVolume * SoundConfig.SFX_VOLUME_MULTIPLIER;
+  }
+
   public bool resetOnStart;
 
   public int requiredPointsToBall {

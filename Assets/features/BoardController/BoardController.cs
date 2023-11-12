@@ -53,10 +53,14 @@ public partial class BoardController : AbstractBoardController {
     InitPlayer(boardHolder.transform);
   }
 
-  IEnumerator PlayBonusBallSound(AudioClip sound) {
+  void PlayBlockHitSound(AbstractBlock blockInstance) {
+    audioSrc.PlayOneShot(blockInstance.SoundOnDestroy, gameData.SfxVolume);
+  }
+
+  IEnumerator PlayBonusBallSound(AbstractBlock blockInstance) {
     for (int i = 0; i < 10; i++) {
       yield return new WaitForSeconds(0.2f);
-      audioSrc.PlayOneShot(sound, gameData.sfxVolume);
+      PlayBlockHitSound(blockInstance);
     }
   }
 
@@ -82,9 +86,9 @@ public partial class BoardController : AbstractBoardController {
            onBlockDestroyed(blockInstance);
            if (!gameData.IsSoundOn) return;
            if (gameData.pointsToBall >= gameData.requiredPointsToBall)
-             StartCoroutine(PlayBonusBallSound(blockInstance.SoundOnDestroy));
+             StartCoroutine(PlayBonusBallSound(blockInstance));
            else
-            audioSrc.PlayOneShot(blockInstance.SoundOnDestroy, gameData.sfxVolume);
+             PlayBlockHitSound(blockInstance);
         });
       });
   }

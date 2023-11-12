@@ -1,4 +1,4 @@
 ﻿
 static class SoundConfig {
-  public const float SFXVolumeScale = 1;
+  public const float SFX_VOLUME_MULTIPLIER = 25f;
 }
