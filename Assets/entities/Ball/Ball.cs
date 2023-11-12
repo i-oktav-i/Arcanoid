@@ -19,12 +19,11 @@ public class Ball : AbstractBall {
   }
 
   private void Update() {
-    if (!rigidbody.isKinematic && Input.GetKeyDown(KeyCode.J)) {
-      var v = rigidbody.velocity;
-      if (Random.Range(0,2) == 0) v.Set(v.x - 0.1f, v.y + 0.1f);
-      else v.Set(v.x + 0.1f, v.y - 0.1f);
-      rigidbody.velocity = v;
-    }
+    if (rigidbody.isKinematic || !Input.GetKeyDown(KeyCode.J)) return;
+    var v = rigidbody.velocity;
+    if (Random.Range(0,2) == 0) v.Set(v.x - 0.1f, v.y + 0.1f);
+    else v.Set(v.x + 0.1f, v.y - 0.1f);
+    rigidbody.velocity = v;
   }
 
   private void OnCollisionEnter2D(Collision2D other) {

@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour {
   private GameObject boardControllerHolder;
   private AbstractBackgroundController backgroundController;
 
+  private UIManager uiManager;
   public GameState gameData;
 
   static bool _gameStarted; // false by default
@@ -22,7 +23,7 @@ public class GameManager : MonoBehaviour {
   }
 
   private void Start() {
-    // Cursor.visible = false;
+    uiManager = Camera.main.GetComponent<UIManager>();
     backgroundController = Instantiate(backgroundControllerPrefab);
     InitGameState();
     InitLevel(gameData.level);
@@ -30,7 +31,7 @@ public class GameManager : MonoBehaviour {
 
   // TODO: move to input manager
   private void Update() {
-    // if (isMenuActive) return;
+    if (uiManager.IsMenuActive) return;
     if (Input.GetKeyDown(KeyCode.M)) gameData.IsMusicOn = !gameData.IsMusicOn;
     if (Input.GetKeyDown(KeyCode.S)) gameData.IsSoundOn = !gameData.IsSoundOn;
     if (Input.GetKeyDown(KeyCode.N)) {
@@ -43,10 +44,7 @@ public class GameManager : MonoBehaviour {
       UnityEditor.EditorApplication.isPlaying = false;
 #endif
     }
-    if (Input.GetButtonDown("Pause")) {
-      if (Time.timeScale > 0) Time.timeScale = 0;
-      else Time.timeScale = 1;
-    }
+    if (Input.GetButtonDown("Pause")) uiManager.ShowPauseMenu();
   }
 
   public void OnBlockDestroyed(AbstractBlock blockInstance)
@@ -90,34 +88,6 @@ public class GameManager : MonoBehaviour {
     Destroy(boardControllerHolder);
   }
 
-  string OnOff(bool boolVal) {
-    return boolVal ? "on" : "off";
-  }
-
-  // TODO: move to some view layer
-  void OnGUI() {
-    // if (isMenuActive) return;
-    GUI.Label(
-      new Rect(5, 4, Screen.width - 10,
-        100),
-    string.Format(
-          "<color=yellow><size=30>Level <b>{0}</b> Balls <b>{1}</b>"+
-          " Score <b>{2}</b></size></color>",
-          gameData.level, gameData.balls, gameData.points
-          )
-    );
-    GUIStyle style = new GUIStyle();
-    style.alignment = TextAnchor.UpperRight;
-    GUI.Label(new Rect(5, 14, Screen.width - 10, 100),
-    string.Format("<color=yellow><size=20><color=white>Space</color>-pause {0}" +
-    " <color=white>N</color>-new" +
-    " <color=white>J</color>-jump" +
-    " <color=white>M</color>-music {1}" +
-    " <color=white>S</color>-sound {2}" +
-    " <color=white>Esc</color>-exit</size></color>",
-    OnOff(Time.timeScale > 0), OnOff(!gameData.music),
-    OnOff(!gameData.sound)), style);
-  }
   void OnApplicationQuit() {
     gameData.Save();
   }

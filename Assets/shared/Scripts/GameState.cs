@@ -16,7 +16,20 @@ public class GameState : ScriptableObject {
 
   public int pointsToBall = 0;
 
+  public bool music = true;
+
+  public float musicVolume = 1f;
+
+  public bool sound = true;
+
+  [FormerlySerializedAs("soundVolume")] public float sfxVolume = 10f;
+
   public bool resetOnStart;
+
+  public int requiredPointsToBall {
+    get  => 400 + (level - 1) * 20;
+  }
+
   public void Reset() {
     level = InitialGameState.Level;
     balls = InitialGameState.BallsCapacity;
@@ -42,14 +55,6 @@ public class GameState : ScriptableObject {
     sound = PlayerPrefs.GetInt("sound", 1) == 1;
   }
 
-  public int requiredPointsToBall {
-    get  => 400 + (level - 1) * 20;
-  }
-
-  // TODO: better to make separate sound manager
-  public bool music = true;
-  public float musicVolume = 1f;
-
   public bool IsMusicOn {
     get => music;
     set {
@@ -66,8 +71,6 @@ public class GameState : ScriptableObject {
     musicSwitchCallbacks.Remove(callback);
   }
 
-  public bool sound = true;
-  [FormerlySerializedAs("soundVolume")] public float sfxVolume = 10f;
   public bool IsSoundOn {
     get => sound;
     set {

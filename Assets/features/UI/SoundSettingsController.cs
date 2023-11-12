@@ -11,6 +11,13 @@ public class SoundSettingsController: MonoBehaviour {
   public GameState gameData;
   private AudioSource audioSrc;
 
+  public void SetSoundSettings() {
+    musicToggle.isOn = gameData.IsMusicOn;
+    sfxToggle.isOn = gameData.IsSoundOn;
+    musicSlider.value = gameData.musicVolume;
+    sfxSlider.value = gameData.sfxVolume;
+  }
+
   private void Start() {
     audioSrc = Camera.main.GetComponent<AudioSource>();
   }

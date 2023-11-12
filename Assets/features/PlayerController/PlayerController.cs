@@ -62,7 +62,7 @@ public class PlayerController : AbstractPlayerController {
       blockInput = true;
 
       var ball = ballsMag[0];
-      ballsMag.RemoveAt(0); // doesn't really matter if it's 0 or len - 1, just need pop
+      ballsMag.RemoveAt(0);
 
       ball.transform.SetParent(transform);
       ball.Launch(new(600, 600));
