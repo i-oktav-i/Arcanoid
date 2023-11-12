@@ -47,6 +47,8 @@ public class GameState : ScriptableObject {
 
   // TODO: better to make separate sound manager
   public bool music = true;
+  public float musicVolume = 1f;
+
   public bool IsMusicOn {
     get => music;
     set {
@@ -64,6 +66,7 @@ public class GameState : ScriptableObject {
   }
 
   public bool sound = true;
+  public float soundVolume = 10f;
   public bool IsSoundOn {
     get => sound;
     set {
