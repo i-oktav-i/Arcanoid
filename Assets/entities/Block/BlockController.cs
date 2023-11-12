@@ -10,6 +10,7 @@ public class BlockController : AbstractBlock {
   private bool isMoving = false;
   private Vector2 moveDirection = Vector2.right;
   [SerializeField] private Sprite[] sprites;
+  public GameObject bonus;
   private SpriteRenderer spritRenderer;
 
   private List<Action> destroyCallbacks = new();
@@ -37,6 +38,8 @@ public class BlockController : AbstractBlock {
   }
 
   public override void DealDamage() {
+    if (HitPoints == 1) {
+      if (UnityEngine.Random.RandomRange(0, 100) <= 26) { SpawnBonus(this.transform.position); } }
     HitPoints -= 1;
   }
 
@@ -87,4 +90,10 @@ public class BlockController : AbstractBlock {
   void OnCollisionEnter2D(Collision2D collision) {
     moveDirection = -moveDirection;
   }
+
+  public void SpawnBonus(Vector2 position) {
+    var bonusadd = Instantiate(prefabmanger.instance.bonus, position, Quaternion.identity);
+    bonusadd.AddComponent(typeof(BonusBaseScript));
+  }
 }
+
