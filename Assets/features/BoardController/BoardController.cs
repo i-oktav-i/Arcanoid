@@ -36,16 +36,16 @@ public partial class BoardController : AbstractBoardController {
     }
   }
 
-  private void SetMusic() {
-    if (gameData.IsMusicOn) audioSrc.Play();
-    else audioSrc.Stop();
-  }
+  // private void SetMusic() {
+  //   if (gameData.IsMusicOn) audioSrc.Play();
+  //   else audioSrc.Stop();
+  // }
 
   AudioSource audioSrc;
   private void Start() {
     audioSrc = Camera.main.GetComponent<AudioSource>();
-    SetMusic();
-    gameData.SubscribeMusicSwitch(SetMusic);
+    // SetMusic();
+    // gameData.SubscribeMusicSwitch(SetMusic);
   }
 
   public override void InitBoard(Vector2 position, int level, Action<AbstractBlock> onBlockDestroyed) {
@@ -59,11 +59,10 @@ public partial class BoardController : AbstractBoardController {
     InitPlayer(boardHolder.transform);
   }
 
-  // TODO make sound manager for such methods
-  IEnumerator PlayBonusBallSound(AudioSource audioSrc, AudioClip sound) {
+  IEnumerator PlayBonusBallSound(AudioClip sound) {
     for (int i = 0; i < 10; i++) {
       yield return new WaitForSeconds(0.2f);
-      audioSrc.PlayOneShot(sound, SoundConfig.SFXVolumeScale);
+      audioSrc.PlayOneShot(sound, gameData.sfxVolume);
     }
   }
 
@@ -88,9 +87,9 @@ public partial class BoardController : AbstractBoardController {
            CurrentBlocksCount -= 1;
            if (gameData.IsSoundOn) {
              if (gameData.pointsToBall >= gameData.requiredPointsToBall)
-               StartCoroutine(PlayBonusBallSound(audioSrc, blockInstance.SoundOnDestroy));
+               StartCoroutine(PlayBonusBallSound(blockInstance.SoundOnDestroy));
              else
-              audioSrc.PlayOneShot(blockInstance.SoundOnDestroy,  SoundConfig.SFXVolumeScale);
+              audioSrc.PlayOneShot(blockInstance.SoundOnDestroy,  gameData.sfxVolume);
            }
            onBlockDestroyed(blockInstance);
         });

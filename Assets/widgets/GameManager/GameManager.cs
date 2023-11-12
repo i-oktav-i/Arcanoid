@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour {
   }
 
   private void Start() {
-    Cursor.visible = false;
+    // Cursor.visible = false;
     backgroundController = Instantiate(backgroundControllerPrefab);
     InitGameState();
     InitLevel(gameData.level);
@@ -30,6 +30,7 @@ public class GameManager : MonoBehaviour {
 
   // TODO: move to input manager
   private void Update() {
+    // if (isMenuActive) return;
     if (Input.GetKeyDown(KeyCode.M)) gameData.IsMusicOn = !gameData.IsMusicOn;
     if (Input.GetKeyDown(KeyCode.S)) gameData.IsSoundOn = !gameData.IsSoundOn;
     if (Input.GetKeyDown(KeyCode.N)) {
@@ -95,6 +96,7 @@ public class GameManager : MonoBehaviour {
 
   // TODO: move to some view layer
   void OnGUI() {
+    // if (isMenuActive) return;
     GUI.Label(
       new Rect(5, 4, Screen.width - 10,
         100),

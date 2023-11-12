@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [CreateAssetMenu(fileName = "GameData", menuName = "Game Data", order = 51)]
 public class GameState : ScriptableObject {
@@ -66,7 +67,7 @@ public class GameState : ScriptableObject {
   }
 
   public bool sound = true;
-  public float soundVolume = 10f;
+  [FormerlySerializedAs("soundVolume")] public float sfxVolume = 10f;
   public bool IsSoundOn {
     get => sound;
     set {
