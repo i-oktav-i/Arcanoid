@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Collections;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -12,41 +13,61 @@ public partial class BoardController : AbstractBoardController {
   [SerializeField] private AbstractBallsDestroyer ballsDestroyer;
 
   private GameObject boardHolder;
-  private readonly float wallWidth = 0.1f;
+  private readonly float wallWidth = BoardConfig.WallWidth;
 
-  private readonly int rows = 6;
-  private readonly int columns = 10;
+  private readonly int rows = BoardConfig.Rows;
+  private readonly int columns = BoardConfig.Columns;
 
-  private readonly int blocksCount = 30;
-  private readonly int chanceCoefficient = 15;
-
-  private List<Action> levelCompleteCallbacks = new();
-  private List<Action> levelLoseCallbacks = new();
+  private readonly int blocksCount = BoardConfig.BlocksCount;
+  private readonly int chanceCoefficient = BoardConfig.ChanceCoefficient;
 
   private bool isDestroy = false;
 
-  public int currentBlocksCount = 0;
+  public GameState gameData;
+
+  private List<Action> blocksEndCallbacks = new();
+
+  private int currentBlocksCount = 0;
   public int CurrentBlocksCount {
     get => currentBlocksCount;
     set {
       currentBlocksCount = value;
-
-      if (value == 0) RunCallbacks(levelCompleteCallbacks);
+      if (value == 0) RunCallbacks(blocksEndCallbacks);
     }
   }
 
-  public override void InitBoard(Vector2 position, int level) {
+  private void SetMusic() {
+    if (gameData.IsMusicOn) audioSrc.Play();
+    else audioSrc.Stop();
+  }
+
+  AudioSource audioSrc;
+  private void Start() {
+    audioSrc = Camera.main.GetComponent<AudioSource>();
+    SetMusic();
+    gameData.SubscribeMusicSwitch(SetMusic);
+  }
+
+  public override void InitBoard(Vector2 position, int level, Action<AbstractBlock> onBlockDestroyed) {
     if (boardHolder) Destroy(boardHolder);
 
     boardHolder = new("Board");
     boardHolder.transform.position = position;
 
     InitBounds(boardHolder.transform);
-    InitBlocks(boardHolder.transform, level);
+    InitBlocks(boardHolder.transform, level, onBlockDestroyed);
     InitPlayer(boardHolder.transform);
   }
 
-  private void InitBlocks(Transform parent, int level) {
+  // TODO make sound manager for such methods
+  IEnumerator PlayBonusBallSound(AudioSource audioSrc, AudioClip sound) {
+    for (int i = 0; i < 10; i++) {
+      yield return new WaitForSeconds(0.2f);
+      audioSrc.PlayOneShot(sound, SoundConfig.SFXVolumeScale);
+    }
+  }
+
+  private void InitBlocks(Transform parent, int level, Action<AbstractBlock> onBlockDestroyed) {
     Random.InitState(level);
     List<Vector2> boardPositions = GetBoardPositions();
     List<int> blockTypes = GetBlocksHits(level, 4);
@@ -62,13 +83,22 @@ public partial class BoardController : AbstractBoardController {
 
         AbstractBlock blockInstance = Instantiate(block, position, Quaternion.identity);
         blockInstance.transform.SetParent(parent);
-        blockInstance.SetBlockType(type);
-        if (type == 3) {
+        if (type == 4) {
           CurrentBlocksCount -= 1;
         }
-        else {
-          blockInstance.SubscribeDestroy(() => CurrentBlocksCount -= 1);
-        }
+        blockInstance.SetBlockType(type);
+        blockInstance.SubscribeDestroy(() => {
+          if (type != 4) {
+            CurrentBlocksCount -= 1;
+          }
+          if (gameData.IsSoundOn) {
+            if (gameData.pointsToBall >= gameData.requiredPointsToBall)
+              StartCoroutine(PlayBonusBallSound(audioSrc, blockInstance.SoundOnDestroy));
+            else
+              audioSrc.PlayOneShot(blockInstance.SoundOnDestroy, SoundConfig.SFXVolumeScale);
+          }
+          onBlockDestroyed(blockInstance);
+        });
       });
   }
 
@@ -96,9 +126,8 @@ public partial class BoardController : AbstractBoardController {
   private void InitPlayer(Transform parent) {
     AbstractPlayerController playerControllerInstance = Instantiate(playerController, new(-0.3f, -10), Quaternion.identity);
     playerControllerInstance.transform.SetParent(parent);
-    playerControllerInstance.SubscribeBallsEnd(() => RunCallbacks(levelLoseCallbacks));
+    // playerControllerInstance.SubscribeBallsEnd(() => RunCallbacks(levelLoseCallbacks));
   }
-
 
   private int GetBLockHits(int level = 0, int maxHits = 0, int currentHits = 0) {
     if (currentHits >= maxHits) return maxHits;
@@ -141,24 +170,13 @@ public partial class BoardController : AbstractBoardController {
     return newList;
   }
 
-  public override Action SubscribeLevelComplete(Action callback) {
-    levelCompleteCallbacks.Add(callback);
-
-    return () => levelCompleteCallbacks.Remove(callback);
+  public override Action SubscribeBlocksEnd(Action callback) {
+    blocksEndCallbacks.Add(callback);
+    return () => blocksEndCallbacks.Remove(callback);
   }
 
-  public override void UnsubscribeLevelComplete(Action callback) {
-    levelCompleteCallbacks.Remove(callback);
-  }
-
-  public override Action SubscribeLevelLose(Action callback) {
-    levelLoseCallbacks.Add(callback);
-
-    return () => levelLoseCallbacks.Remove(callback);
-  }
-
-  public override void UnsubscribeLevelLose(Action callback) {
-    levelLoseCallbacks.Remove(callback);
+  public override void UnsubscribeBlocksEnd(Action callback) {
+    blocksEndCallbacks.Remove(callback);
   }
 
   private void RunCallbacks(List<Action> list) {

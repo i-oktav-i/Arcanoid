@@ -340,6 +340,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e17914c36bec31f46ae9c64c934bc797, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  points: 1
+  SoundOnDestroy: {fileID: 8300000, guid: 2df1089db64c1df4d9a6f23f3caa57b6, type: 3}
   sprites:
   - {fileID: 21300000, guid: a4d75592a98a805479e949f26a626a05, type: 3}
   - {fileID: 21300000, guid: ef6824e158b3bc04ca0b85645590dc03, type: 3}

@@ -1,84 +1,75 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
 public class PlayerController : AbstractPlayerController {
   [SerializeField] private AbstractPlayer playerPrefab;
   private AbstractPlayer player;
   [SerializeField] private AbstractBall ballPrefab;
-  private AbstractBall spawnedBall;
-  private int notLaunchedBalls = 1;
-  private int ballsCount = 0;
+
+  private List<AbstractBall> ballsMag = new();
+
   private bool blockInput = false;
-  private List<Action> ballsEndCallbacks = new();
+
+  public GameState gameData;
 
   private bool isDestroy = false;
+  private void OnDestroy() => isDestroy = true;
 
-  public int BallsCount {
-    get => ballsCount; set {
-      ballsCount = value;
-
-      if (value > 0 || notLaunchedBalls > 0) return;
-
-      OnBallsEnd();
-    }
+  private int AmmoCount {
+    get => ballsMag.Count;
   }
 
-  public override void AddBalls(int count) {
-    notLaunchedBalls = count;
-
-    SpawnBall();
-  }
+  private int releasedBallsCnt = 0;
 
   private void Awake() {
     player = Instantiate(playerPrefab, transform.position, Quaternion.identity);
     player.transform.SetParent(transform);
-
-    SpawnBall();
+    FillBallsMag();
   }
 
-  private void SpawnBall() {
-    if (spawnedBall != null || notLaunchedBalls <= 0) return;
+  public override void FillBallsMag() {
+    if (isDestroy) return;
+    var ballsToSpawn = Math.Min(InitialGameState.BallsMagCapacity, gameData.BallsCapacity);
 
-    spawnedBall = Instantiate(ballPrefab, player.transform.position + new Vector3(1.1f, 1.1f), Quaternion.identity);
-    spawnedBall.transform.SetParent(player.transform);
+    var newBalls = Enumerable.Range(0, ballsToSpawn)
+      .Select((idx) => SpawnBall())
+      .ToList();
 
-    BallsCount += 1;
-    _ = spawnedBall.SubscribeDestroy(() => BallsCount -= 1);
+    ballsMag.AddRange(newBalls);
+  }
 
-    notLaunchedBalls -= 1;
+  private AbstractBall SpawnBall() {
+    var newBall = Instantiate(ballPrefab, player.transform.position + new Vector3(1.1f, 1.1f), Quaternion.identity);
+    newBall.transform.SetParent(player.transform);
+
+    // TODO: move "no balls" case resolving to game manager
+    newBall.SubscribeDestroy(() => {
+      if (isDestroy) return;
+      gameData.BallsCapacity--;
+      releasedBallsCnt--;
+      if (releasedBallsCnt <= 0) FillBallsMag();
+    });
+
+    return newBall;
   }
 
   private void Update() {
-    if (!blockInput && Input.GetKeyDown(KeyCode.Space) && spawnedBall) {
+    if (!blockInput && Input.GetButtonDown("Fire1") && AmmoCount > 0) {
       blockInput = true;
 
-      spawnedBall.transform.SetParent(transform);
-      spawnedBall.Launch(new(600, 600));
-      spawnedBall = null;
+      var ball = ballsMag[0];
+      ballsMag.RemoveAt(0); // doesn't really matter if it's 0 or len - 1, just need pop
 
-      SpawnBall();
+      ball.transform.SetParent(transform);
+      ball.Launch(new(600, 600));
+      releasedBallsCnt++;
     }
     else {
       blockInput = false;
     }
   }
-
-  override public Action SubscribeBallsEnd(Action callback) {
-    ballsEndCallbacks.Add(callback);
-
-    return () => ballsEndCallbacks.Remove(callback);
-  }
-  override public void UnsubscribeBallsEnd(Action callback) {
-    ballsEndCallbacks.Remove(callback);
-  }
-
-  private void OnBallsEnd() {
-    if (isDestroy) return;
-
-    ballsEndCallbacks.ForEach(callback => callback());
-  }
-
-  private void OnDestroy() => isDestroy = true;
 }

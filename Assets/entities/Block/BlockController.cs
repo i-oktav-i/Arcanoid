@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class BlockController : AbstractBlock {
   private new Rigidbody2D rigidbody;
-  private int hitPoints = 1;
   private TextMeshProUGUI hpText;
   private bool isMoving = false;
   private Vector2 moveDirection = Vector2.right;
@@ -49,17 +48,18 @@ public class BlockController : AbstractBlock {
     transform.localScale = new(size.horizontal, size.vertical);
   }
 
-  override public Action SubscribeDestroy(Action callback) {
+  public override Action SubscribeDestroy(Action callback) {
     destroyCallbacks.Add(callback);
 
     return () => destroyCallbacks.Remove(callback);
   }
-  override public void UnsubscribeDestroy(Action callback) {
+  public override void UnsubscribeDestroy(Action callback) {
     destroyCallbacks.Remove(callback);
   }
 
   public override void SetBlockType(int type) {
     spritRenderer.sprite = sprites[type % sprites.Length];
+    Debug.Log(type);
     SetHitPoints(GameConfig.blockHPs[type]);
     switch (type) {
       case 1:
