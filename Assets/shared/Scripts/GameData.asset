@@ -16,8 +16,8 @@ MonoBehaviour:
   balls: 0
   points: 0
   pointsToBall: 400
-  music: 1
-  musicVolume: 1
-  sound: 1
-  sfxVolume: 10
+  music: 0
+  musicVolume: 0.06714252
+  sound: 0
+  sfxVolume: 0.42714286
   resetOnStart: 1

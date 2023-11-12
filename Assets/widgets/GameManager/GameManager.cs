@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour {
   private void InitGameState() {
     if (_gameStarted) return;
     _gameStarted = true;
-    if (gameData.resetOnStart) gameData.Load(); // gameData.Reset();
+    if (gameData.resetOnStart) gameData.Load();
   }
 
   private void Start() {
@@ -29,22 +29,15 @@ public class GameManager : MonoBehaviour {
     InitLevel(gameData.level);
   }
 
-  // TODO: move to input manager
+  public void StartNewGame() {
+    gameData.Reset();
+    InitLevel(InitialGameState.Level);
+    if (uiManager.IsMenuActive) uiManager.HidePauseMenu();
+  }
+
   private void Update() {
     if (uiManager.IsMenuActive) return;
-    if (Input.GetKeyDown(KeyCode.M)) gameData.IsMusicOn = !gameData.IsMusicOn;
-    if (Input.GetKeyDown(KeyCode.S)) gameData.IsSoundOn = !gameData.IsSoundOn;
-    if (Input.GetKeyDown(KeyCode.N)) {
-      gameData.Reset();
-      SceneManager.LoadScene("Main");
-    }
-    if (Input.GetKeyDown(KeyCode.Escape)) {
-      Application.Quit();
-#if UNITY_EDITOR
-      UnityEditor.EditorApplication.isPlaying = false;
-#endif
-    }
-    if (Input.GetButtonDown("Pause")) uiManager.ShowPauseMenu();
+    if (Input.GetKeyDown(KeyCode.N)) StartNewGame();
   }
 
   public void OnBlockDestroyed(AbstractBlock blockInstance)
@@ -71,12 +64,11 @@ public class GameManager : MonoBehaviour {
     boardController.SubscribeBlocksEnd(() => {
       Debug.Log($"Level {level} COMPLETE!");
       if (gameData.level < LevelsConfig.MaxLevel) gameData.level += 1;
-      SceneManager.LoadScene("Main");
+      InitLevel(gameData.level);
     });
     gameData.SubscribeBallsEnd(() => {
       Debug.Log($"Level {level} lose.");
-      gameData.Reset();
-      SceneManager.LoadScene("Main");
+      StartNewGame();
     });
 
     boardController.transform.SetParent(boardControllerHolder.transform);

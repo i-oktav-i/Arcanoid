@@ -19,9 +19,16 @@ public class UIManager : MonoBehaviour {
   }
 
   void Start() {
-    // mainCanvas = GameObject.Find("MainMenuCanvas");
-    // pauseCanvas = GameObject.Find("PauseManuCanvas");
     pauseCanvas.SetActive(false);
+  }
+
+  private void Update() {
+    if (Input.GetKeyDown(KeyCode.M)) gameData.IsMusicOn = !gameData.IsMusicOn;
+    if (Input.GetKeyDown(KeyCode.S)) gameData.IsSoundOn = !gameData.IsSoundOn;
+    if (Input.GetButtonDown("Pause")) {
+      if (activeLayout == ActiveLayout.PauseMenu) HidePauseMenu();
+      if (activeLayout == ActiveLayout.Board) ShowPauseMenu();
+    }
   }
 
   public void OnClickExit() {
