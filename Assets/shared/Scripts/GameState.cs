@@ -17,11 +17,9 @@ public class GameState : ScriptableObject {
   public int pointsToBall = 0;
 
   public bool music = true;
-
-  public float musicVolume = 1f;
-
   public bool sound = true;
 
+  public float musicVolume = 1f;
   [FormerlySerializedAs("soundVolume")] public float sfxVolume = 10f;
 
   public bool resetOnStart;
@@ -44,6 +42,8 @@ public class GameState : ScriptableObject {
     PlayerPrefs.SetInt("pointsToBall", pointsToBall);
     PlayerPrefs.SetInt("music", music ? 1 : 0);
     PlayerPrefs.SetInt("sound", sound ? 1 : 0);
+    PlayerPrefs.SetFloat("musicVolume", musicVolume);
+    PlayerPrefs.SetFloat("sfxVolume", sfxVolume);
   }
 
   public void Load() {
@@ -53,6 +53,8 @@ public class GameState : ScriptableObject {
     pointsToBall = PlayerPrefs.GetInt("pointsToBall", 0);
     music = PlayerPrefs.GetInt("music", 1) == 1;
     sound = PlayerPrefs.GetInt("sound", 1) == 1;
+    musicVolume = PlayerPrefs.GetFloat("musicVolume");
+    sfxVolume = PlayerPrefs.GetFloat("sfxVolume");
   }
 
   public bool IsMusicOn {

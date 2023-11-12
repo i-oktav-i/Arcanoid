@@ -65,7 +65,7 @@ public class PlayerController : AbstractPlayerController {
       blockInput = true;
 
       // var ballsCount = ballsMag.Count;
-      // for (int i = 0; i < ballsCount; i++) { // sorry.
+      // for (int i = 0; i < ballsCount; i++) {
       //   ballsMag[i].transform.SetParent(transform);
       //   ballsMag[i].Launch(new(600, 600));
       //   releasedBallsCnt++;

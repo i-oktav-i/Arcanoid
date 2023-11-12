@@ -10,7 +10,10 @@ public class UIManager : MonoBehaviour {
   private ActiveLayout activeLayout;
 
   public GameObject pauseCanvas;
+  private PauseMenuController pauseMenuController;
+
   public GameObject mainCanvas;
+  private MainMenuController mainMenuController;
 
   public GameState gameData;
 
@@ -19,6 +22,9 @@ public class UIManager : MonoBehaviour {
   }
 
   void Start() {
+    mainMenuController = mainCanvas.GetComponentInChildren<MainMenuController>();
+    pauseMenuController = pauseCanvas.GetComponentInChildren<PauseMenuController>();
+    mainMenuController.SetSoundSettings();
     pauseCanvas.SetActive(false);
   }
 
@@ -42,9 +48,7 @@ public class UIManager : MonoBehaviour {
     activeLayout = ActiveLayout.MainMenu;
     Time.timeScale = 0f;
     mainCanvas.SetActive(true);
-
-    var menuController = mainCanvas.GetComponentInChildren<MainMenuController>();
-    menuController.SetSoundSettings();
+    mainMenuController.SetSoundSettings();
 
     var controls = mainCanvas.GetComponentInChildren<MainMenuController>();
     controls.exitButton.gameObject.SetActive(isEnd);
@@ -66,9 +70,7 @@ public class UIManager : MonoBehaviour {
     Time.timeScale = 0f;
     pauseCanvas.SetActive(true);
     Cursor.visible = true;
-
-    var menuController = pauseCanvas.GetComponentInChildren<PauseMenuController>();
-    menuController.SetSoundSettings();
+    pauseMenuController.SetSoundSettings();
   }
 
   public void HidePauseMenu() {

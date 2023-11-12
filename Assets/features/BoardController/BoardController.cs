@@ -25,6 +25,8 @@ public partial class BoardController : AbstractBoardController {
 
   public GameState gameData;
 
+    AudioSource audioSrc;
+
   private List<Action> blocksEndCallbacks = new();
 
   private int currentBlocksCount = 0;
@@ -36,16 +38,8 @@ public partial class BoardController : AbstractBoardController {
     }
   }
 
-  // private void SetMusic() {
-  //   if (gameData.IsMusicOn) audioSrc.Play();
-  //   else audioSrc.Stop();
-  // }
-
-  AudioSource audioSrc;
   private void Start() {
     audioSrc = Camera.main.GetComponent<AudioSource>();
-    // SetMusic();
-    // gameData.SubscribeMusicSwitch(SetMusic);
   }
 
   public override void InitBoard(Vector2 position, int level, Action<AbstractBlock> onBlockDestroyed) {
@@ -85,13 +79,12 @@ public partial class BoardController : AbstractBoardController {
         blockInstance.SetHitPoints(hits);
         blockInstance.SubscribeDestroy(() => {
            CurrentBlocksCount -= 1;
-           if (gameData.IsSoundOn) {
-             if (gameData.pointsToBall >= gameData.requiredPointsToBall)
-               StartCoroutine(PlayBonusBallSound(blockInstance.SoundOnDestroy));
-             else
-              audioSrc.PlayOneShot(blockInstance.SoundOnDestroy,  gameData.sfxVolume);
-           }
            onBlockDestroyed(blockInstance);
+           if (!gameData.IsSoundOn) return;
+           if (gameData.pointsToBall >= gameData.requiredPointsToBall)
+             StartCoroutine(PlayBonusBallSound(blockInstance.SoundOnDestroy));
+           else
+            audioSrc.PlayOneShot(blockInstance.SoundOnDestroy, gameData.sfxVolume);
         });
       });
   }
