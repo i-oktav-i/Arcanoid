@@ -34,7 +34,7 @@ public class GameManager : MonoBehaviour {
     if (Input.GetKeyDown(KeyCode.S)) gameData.IsSoundOn = !gameData.IsSoundOn;
     if (Input.GetKeyDown(KeyCode.N)) {
       gameData.Reset();
-      SceneManager.LoadScene("MainScene");
+      SceneManager.LoadScene("Main");
     }
     if (Input.GetKeyDown(KeyCode.Escape)) {
       Application.Quit();
