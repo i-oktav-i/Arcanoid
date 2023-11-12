@@ -7,6 +7,9 @@ public class Ball : AbstractBall {
   private new Rigidbody2D rigidbody;
   private List<Action> destroyCallbacks = new();
 
+  public GameState gameData;
+  AudioSource audioSrc;
+
   public override void Launch(Vector2 force) {
     if (rigidbody.bodyType == RigidbodyType2D.Dynamic) return;
 
@@ -16,6 +19,10 @@ public class Ball : AbstractBall {
 
   private void Awake() {
     rigidbody = GetComponent<Rigidbody2D>();
+  }
+
+  private void Start() {
+    audioSrc = Camera.main.GetComponent<AudioSource>();
   }
 
   private void Update() {
@@ -32,6 +39,9 @@ public class Ball : AbstractBall {
     if (!wall) return;
 
     wall.DealDamage();
+
+    if (!gameData.IsSoundOn) return;
+    PlayOnHitSound();
   }
 
    public override Action SubscribeDestroy(Action callback) {
@@ -45,5 +55,18 @@ public class Ball : AbstractBall {
 
   private void OnDestroy() {
     destroyCallbacks.ForEach(item => item());
+
+    if (!gameData.IsSoundOn) return;
+    PlayOnLoseSound();
+  }
+
+  public override void PlayOnHitSound() {
+    if (!audioSrc) return;
+    audioSrc.PlayOneShot(SoundOnHit, gameData.SfxVolume);
+  }
+
+  public override void PlayOnLoseSound() {
+    if (!audioSrc) return;
+    audioSrc.PlayOneShot(SoundOnLose, gameData.SfxVolume);
   }
 }

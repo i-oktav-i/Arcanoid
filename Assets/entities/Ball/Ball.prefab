@@ -161,3 +161,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f7fa3001409cff47874bcc8025e8c00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SoundOnLose: {fileID: 8300000, guid: cbc762ec63886ef46823aedbadc772b6, type: 3}
+  SoundOnHit: {fileID: 8300000, guid: 5d1bc3ae7683d2d48960d70a810b0cd7, type: 3}
+  gameData: {fileID: 11400000, guid: fa19b9d67d99a4a489fb4f585104d338, type: 2}

@@ -25,7 +25,7 @@ public partial class BoardController : AbstractBoardController {
 
   public GameState gameData;
 
-    AudioSource audioSrc;
+  AudioSource audioSrc;
 
   private List<Action> blocksEndCallbacks = new();
 
@@ -53,14 +53,10 @@ public partial class BoardController : AbstractBoardController {
     InitPlayer(boardHolder.transform);
   }
 
-  void PlayBlockHitSound(AbstractBlock blockInstance) {
-    audioSrc.PlayOneShot(blockInstance.SoundOnDestroy, gameData.SfxVolume);
-  }
-
   IEnumerator PlayBonusBallSound(AbstractBlock blockInstance) {
     for (int i = 0; i < 10; i++) {
       yield return new WaitForSeconds(0.2f);
-      PlayBlockHitSound(blockInstance);
+      blockInstance.PlayOnDestroySound();
     }
   }
 
@@ -88,7 +84,7 @@ public partial class BoardController : AbstractBoardController {
            if (gameData.pointsToBall >= gameData.requiredPointsToBall)
              StartCoroutine(PlayBonusBallSound(blockInstance));
            else
-             PlayBlockHitSound(blockInstance);
+             blockInstance.PlayOnDestroySound();
         });
       });
   }
@@ -117,7 +113,6 @@ public partial class BoardController : AbstractBoardController {
   private void InitPlayer(Transform parent) {
     AbstractPlayerController playerControllerInstance = Instantiate(playerController, new(-0.3f, -10), Quaternion.identity);
     playerControllerInstance.transform.SetParent(parent);
-    // playerControllerInstance.SubscribeBallsEnd(() => RunCallbacks(levelLoseCallbacks));
   }
 
   private int GetBLockHits(int level = 0, int maxHits = 0, int currentHits = 0) {

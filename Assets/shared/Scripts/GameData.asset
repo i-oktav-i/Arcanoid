@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: GameData
   m_EditorClassIdentifier: 
   level: 1
-  balls: 5
-  points: 57
-  pointsToBall: 57
-  music: 0
+  balls: 6
+  points: 0
+  pointsToBall: 0
+  music: 1
   sound: 1
-  musicVolume: 0.045714393
-  sfxVolume: 1
+  musicVolume: 0.16571423
+  sfxVolume: 0.14571424
   resetOnStart: 1

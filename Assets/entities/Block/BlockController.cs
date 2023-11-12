@@ -7,6 +7,9 @@ public class BlockController : AbstractBlock {
   [SerializeField] private Sprite[] sprites;
   private SpriteRenderer spritRenderer;
 
+  AudioSource audioSrc;
+  public GameState gameData;
+
   private List<Action> destroyCallbacks = new();
 
   [SerializeField]
@@ -30,6 +33,10 @@ public class BlockController : AbstractBlock {
     spritRenderer.sprite = sprites[0];
   }
 
+  private void Start() {
+    audioSrc = Camera.main.GetComponent<AudioSource>();
+  }
+
   public override void DealDamage() {
     HitPoints -= 1;
   }
@@ -47,7 +54,13 @@ public class BlockController : AbstractBlock {
 
     return () => destroyCallbacks.Remove(callback);
   }
+
   public override void UnsubscribeDestroy(Action callback) {
     destroyCallbacks.Remove(callback);
+  }
+
+  public override void PlayOnDestroySound() {
+    if (!audioSrc) return;
+    audioSrc.PlayOneShot(SoundOnDestroy, gameData.SfxVolume);
   }
 }
