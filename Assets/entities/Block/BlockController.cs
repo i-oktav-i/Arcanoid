@@ -6,6 +6,7 @@ using UnityEngine;
 public class BlockController : AbstractBlock {
   [SerializeField] private Sprite[] sprites;
   private SpriteRenderer spritRenderer;
+  public GameObject bonus;
 
   private List<Action> destroyCallbacks = new();
 
@@ -31,6 +32,7 @@ public class BlockController : AbstractBlock {
   }
 
   public override void DealDamage() {
+    if (HitPoints == 1) { SpawnBonus(this.transform.position); }
     HitPoints -= 1;
   }
 
@@ -49,5 +51,9 @@ public class BlockController : AbstractBlock {
   }
   public override void UnsubscribeDestroy(Action callback) {
     destroyCallbacks.Remove(callback);
+  }
+  public void SpawnBonus(Vector2 position) {
+    var bonusadd = Instantiate(prefabmanger.instance.bonus, position, Quaternion.identity);
+    bonusadd.AddComponent(typeof(BonusBaseScript));
   }
 }

@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour {
 
   private GameObject boardControllerHolder;
   private AbstractBackgroundController backgroundController;
-
+  public GameObject bonus;
   public GameState gameData;
 
   static bool _gameStarted; // false by default
@@ -58,8 +58,12 @@ public class GameManager : MonoBehaviour {
       gameData.pointsToBall -= gameData.requiredPointsToBall;
     }
   }
+  public void SpawnBonus(Vector2 position) {
+    var bonusadd = Instantiate(bonus, position, Quaternion.identity);
+    bonusadd.AddComponent(typeof(BonusBaseScript));
+  }
 
-  private void InitLevel(int level) {
+    private void InitLevel(int level) {
     Debug.Log($"Initializing level {level}...");
 
     backgroundController.SetBackground(level - 1);
