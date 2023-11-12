@@ -63,7 +63,12 @@ public partial class BoardController : AbstractBoardController {
         AbstractBlock blockInstance = Instantiate(block, position, Quaternion.identity);
         blockInstance.transform.SetParent(parent);
         blockInstance.SetBlockType(type);
-        blockInstance.SubscribeDestroy(() => CurrentBlocksCount -= 1);
+        if (type == 3) {
+          CurrentBlocksCount -= 1;
+        }
+        else {
+          blockInstance.SubscribeDestroy(() => CurrentBlocksCount -= 1);
+        }
       });
   }
 
