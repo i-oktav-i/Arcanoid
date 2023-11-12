@@ -49,7 +49,7 @@ public partial class BoardController : AbstractBoardController {
   private void InitBlocks(Transform parent, int level) {
     Random.InitState(level);
     List<Vector2> boardPositions = GetBoardPositions();
-    List<int> blocksHits = GetBlocksHits(level, 4);
+    List<int> blockTypes = GetBlocksHits(level, 4);
 
     currentBlocksCount = blocksCount;
 
@@ -57,12 +57,12 @@ public partial class BoardController : AbstractBoardController {
       .Range(0, blocksCount)
       .ToList()
       .ForEach(index => {
-        int hits = blocksHits[index];
+        int type = blockTypes[index];
         Vector2 position = boardPositions[index];
 
         AbstractBlock blockInstance = Instantiate(block, position, Quaternion.identity);
         blockInstance.transform.SetParent(parent);
-        blockInstance.SetHitPoints(hits);
+        blockInstance.SetBlockType(type);
         blockInstance.SubscribeDestroy(() => CurrentBlocksCount -= 1);
       });
   }

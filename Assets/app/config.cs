@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 static class GameConfig {
@@ -19,4 +20,17 @@ static class GameConfig {
   public static float ViewportAspectRatio = 1920f / 1080f;
 
   public static float CameraWidthUnits => ViewportAspectRatio * CameraHeightUnits;
+
+  // Game balance controls
+
+  public static float yellowMovingProbability = 0.5f;
+  public static float yellowMoveSpeed = 5f;
+
+  public static Dictionary<int, int> blockHPs = new Dictionary<int, int>()
+    {
+      {1, 2},
+      {2, 4},
+      {3, 1},
+      {4, 30}
+    };
 }
