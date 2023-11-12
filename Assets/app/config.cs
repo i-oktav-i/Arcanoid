@@ -33,4 +33,12 @@ static class GameConfig {
       {3, 1},
       {4, 30}
     };
+
+  public static Dictionary<int, int> blockPoints = new Dictionary<int, int>()
+    {
+      {1, 20},
+      {2, 40},
+      {3, 10},
+      {4, 100}
+    };
 }

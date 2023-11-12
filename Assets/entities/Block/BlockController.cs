@@ -59,8 +59,8 @@ public class BlockController : AbstractBlock {
 
   public override void SetBlockType(int type) {
     spritRenderer.sprite = sprites[type % sprites.Length];
-    Debug.Log(type);
     SetHitPoints(GameConfig.blockHPs[type]);
+    points = GameConfig.blockPoints[type];
     switch (type) {
       case 1:
         break;
