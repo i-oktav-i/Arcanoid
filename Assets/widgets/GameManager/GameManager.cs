@@ -32,7 +32,11 @@ public class GameManager : MonoBehaviour {
   public void StartNewGame() {
     gameData.Reset();
     InitLevel(InitialGameState.Level);
-    if (uiManager.IsMenuActive) uiManager.HidePauseMenu();
+    Cursor.visible = false;
+    if (uiManager.IsMenuActive) {
+      uiManager.HidePauseMenu();
+      uiManager.HideMainMenu();
+    }
   }
 
   private void Update() {
@@ -64,6 +68,7 @@ public class GameManager : MonoBehaviour {
     boardController.SubscribeBlocksEnd(() => {
       Debug.Log($"Level {level} COMPLETE!");
       if (gameData.level < LevelsConfig.MaxLevel) gameData.level += 1;
+      else uiManager.ShowMainMenu(true);
       InitLevel(gameData.level);
     });
     gameData.SubscribeBallsEnd(() => {

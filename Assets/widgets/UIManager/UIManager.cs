@@ -25,6 +25,8 @@ public class UIManager : MonoBehaviour {
     mainMenuController = mainCanvas.GetComponentInChildren<MainMenuController>();
     pauseMenuController = pauseCanvas.GetComponentInChildren<PauseMenuController>();
     mainMenuController.SetSoundSettings();
+    Cursor.visible = true;
+    mainMenuController.exitButton.gameObject.SetActive(false);
     pauseCanvas.SetActive(false);
   }
 
@@ -46,20 +48,15 @@ public class UIManager : MonoBehaviour {
 
   public void ShowMainMenu(bool isEnd = false) {
     activeLayout = ActiveLayout.MainMenu;
+    Cursor.visible = true;
     Time.timeScale = 0f;
     mainCanvas.SetActive(true);
     mainMenuController.SetSoundSettings();
-
-    var controls = mainCanvas.GetComponentInChildren<MainMenuController>();
-    controls.exitButton.gameObject.SetActive(isEnd);
-
-    if (isEnd) {
-      Cursor.visible = true;
-      gameData.level = 1;
-    }
+    mainMenuController.exitButton.gameObject.SetActive(isEnd);
   }
 
   public void HideMainMenu() {
+    Cursor.visible = false;
     activeLayout = ActiveLayout.Board;
     mainCanvas.SetActive(false);
     Time.timeScale = 1f;
