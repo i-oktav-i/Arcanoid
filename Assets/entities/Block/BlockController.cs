@@ -53,9 +53,7 @@ public class BlockController : AbstractBlock {
     destroyCallbacks.Remove(callback);
   }
   public void SpawnBonus(Vector2 position) {
-    if (UnityEngine.Random.RandomRange(0, 100) <= 25) {
-      var bonusadd = Instantiate(prefabmanger.instance.bonus, position, Quaternion.identity);
-      bonusadd.AddComponent(typeof(BonusBaseScript));
-    }
+    if(Random.RandomRange(0,100)<=25){ var bonusadd = Instantiate(prefabmanger.instance.bonus, position, Quaternion.identity);
+    bonusadd.AddComponent(typeof(BonusBaseScript));}
   }
 }
