@@ -7,11 +7,9 @@ public class SoundManager : MonoBehaviour {
   public GameState gameData;
 
   private void SetMusic() {
-    if (gameData.IsMusicOn) {
-       audioSrc.Play();
-    } else {
-      audioSrc.Stop();
-    }
+    audioSrc.volume = gameData.MusicVolume;
+    if (gameData.IsMusicOn) audioSrc.Play();
+    else audioSrc.Stop();
   }
 
   private void Start() {

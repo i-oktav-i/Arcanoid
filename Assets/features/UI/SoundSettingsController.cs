@@ -14,7 +14,7 @@ public class SoundSettingsController: MonoBehaviour {
   public void SetSoundSettings() {
     musicToggle.isOn = gameData.IsMusicOn;
     sfxToggle.isOn = gameData.IsSoundOn;
-    musicSlider.value = gameData.musicVolume;
+    musicSlider.value = gameData.MusicVolume;
     sfxSlider.value = gameData.sfxVolume;
   }
 
@@ -23,8 +23,8 @@ public class SoundSettingsController: MonoBehaviour {
   }
 
   public void OnChangeMusicVolume() {
-    audioSrc.volume = musicSlider.value;
-    gameData.musicVolume = musicSlider.value;
+    gameData.MusicVolume = musicSlider.value;
+    audioSrc.volume = gameData.MusicVolume;
   }
 
   public void OnChangeSoundVolume() {

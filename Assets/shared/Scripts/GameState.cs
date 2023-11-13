@@ -22,6 +22,15 @@ public class GameState : ScriptableObject {
   public float musicVolume = 1f;
   [FormerlySerializedAs("soundVolume")] public float sfxVolume = 10f;
 
+  // TODO: separate audio source for sfx
+  private const float fakeZero = 0.005f;
+  public float MusicVolume {
+    get => Math.Max(musicVolume, fakeZero);
+    set {
+      musicVolume = value;
+    }
+  }
+
   public float SfxVolume {
     get => sfxVolume * SoundConfig.SFX_VOLUME_MULTIPLIER;
   }
