@@ -37,6 +37,7 @@ public class UIManager : MonoBehaviour {
       if (activeLayout == ActiveLayout.PauseMenu) HidePauseMenu();
       if (activeLayout == ActiveLayout.Board) ShowPauseMenu();
     }
+    if (Input.GetKeyDown(KeyCode.Escape)) OnClickExit();
   }
 
   public void OnClickExit() {
