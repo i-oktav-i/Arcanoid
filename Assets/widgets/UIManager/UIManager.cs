@@ -88,7 +88,7 @@ public class UIManager : MonoBehaviour {
     string.Format(
           "<color=yellow><size=30>Level <b>{0}</b> Balls <b>{1}</b>"+
           " Score <b>{2}</b></size></color>",
-          gameData.level, gameData.balls, gameData.points
+          gameData.level, gameData.BallsCapacity, gameData.points
           )
     );
     GUIStyle style = new GUIStyle();

@@ -52,13 +52,6 @@ public partial class BoardController : AbstractBoardController {
     InitPlayer(boardHolder.transform);
   }
 
-  IEnumerator PlayBonusBallSound(AbstractBlock blockInstance) {
-    for (int i = 0; i < 10; i++) {
-      yield return new WaitForSeconds(0.2f);
-      blockInstance.PlayOnDestroySound();
-    }
-  }
-
   private void InitBlocks(Transform parent, int level, Action<AbstractBlock> onBlockDestroyed) {
     Random.InitState(level);
     List<Vector2> boardPositions = GetBoardPositions();
@@ -84,11 +77,6 @@ public partial class BoardController : AbstractBoardController {
             CurrentBlocksCount -= 1;
           }
           onBlockDestroyed(blockInstance);
-          if (!gameData.IsSoundOn) return;
-          if (gameData.pointsToBall >= gameData.requiredPointsToBall)
-            StartCoroutine(PlayBonusBallSound(blockInstance));
-          else
-            blockInstance.PlayOnDestroySound();
         });
       });
   }

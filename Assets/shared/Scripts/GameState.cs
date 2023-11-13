@@ -14,7 +14,22 @@ public class GameState : ScriptableObject {
 
   public int points = InitialGameState.Points;
 
-  public int pointsToBall = 0;
+  private int pointsToBall  = InitialGameState.PointsToBall;
+  public int PointsToBall {
+    get => pointsToBall;
+    set {
+      pointsToBall = value;
+      pointsToBallCallbacks.ForEach(callback => callback());
+    }
+  }
+  private List<Action> pointsToBallCallbacks = new();
+  public Action SubscribePointsToBall(Action callback) {
+    pointsToBallCallbacks.Add(callback);
+    return () => pointsToBallCallbacks.Remove(callback);
+  }
+  public void UnsubscribePointsToBall(Action callback) {
+    pointsToBallCallbacks.Remove(callback);
+  }
 
   public bool resetOnStart;
   public bool music = true;
@@ -58,10 +73,10 @@ public class GameState : ScriptableObject {
   }
 
   public void Load() {
-    level = PlayerPrefs.GetInt("level", 1);
-    balls = PlayerPrefs.GetInt("balls", 6);
-    points = PlayerPrefs.GetInt("points", 0);
-    pointsToBall = PlayerPrefs.GetInt("pointsToBall", 0);
+    level = PlayerPrefs.GetInt("level", InitialGameState.Level);
+    balls = PlayerPrefs.GetInt("balls", InitialGameState.BallsCapacity);
+    points = PlayerPrefs.GetInt("points",  InitialGameState.Points);
+    pointsToBall = PlayerPrefs.GetInt("pointsToBall", InitialGameState.PointsToBall);
     music = PlayerPrefs.GetInt("music", 1) == 1;
     sound = PlayerPrefs.GetInt("sound", 1) == 1;
     musicVolume = PlayerPrefs.GetFloat("musicVolume");

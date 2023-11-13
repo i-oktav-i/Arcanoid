@@ -17,8 +17,9 @@ public class BonusBaseScript : MonoBehaviour
 
     protected virtual void BonusActivate()
     {
-    UnityEngine.Debug.Log("Бонус пойман");
-      prefabmanger.instance.GameData.points+= pointsPerActivation;
+      UnityEngine.Debug.Log("bONUS GAINED");
+      prefabmanger.instance.GameData.points += pointsPerActivation;
+      prefabmanger.instance.GameData.PointsToBall += pointsPerActivation;
     }
 
     protected virtual void initializeFields(){}
@@ -47,7 +48,7 @@ public class BonusBaseScript : MonoBehaviour
             transform.position = pos;
         }
     }
-    
+
     void OnTriggerEnter2D(Collider2D other)
     {
     if (other.gameObject.CompareTag("Player")) {

@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviour {
     backgroundController = Instantiate(backgroundControllerPrefab);
     InitGameState();
     InitLevel(gameData.level);
+    gameData.SubscribePointsToBall(OnPointsToBallChanged);
   }
 
   public void StartNewGame() {
@@ -44,14 +45,23 @@ public class GameManager : MonoBehaviour {
     if (Input.GetKeyDown(KeyCode.N)) StartNewGame();
   }
 
+  IEnumerator PlayBonusBallSound(AbstractBlock blockInstance) {
+    for (int i = 0; i < 10; i++) {
+      yield return new WaitForSeconds(0.2f);
+      blockInstance.PlayOnDestroySound();
+    }
+  }
+
+  public void OnPointsToBallChanged() {
+    if (gameData.PointsToBall < gameData.requiredPointsToBall) return;
+    gameData.BallsCapacity += 1;
+    Debug.Log("Ball added to inventory");
+    gameData.PointsToBall -= gameData.requiredPointsToBall;
+  }
+
   public void OnBlockDestroyed(AbstractBlock blockInstance) {
     gameData.points += blockInstance.points;
-    gameData.pointsToBall += blockInstance.points;
-    if (gameData.pointsToBall >= gameData.requiredPointsToBall) {
-      Debug.Log("Ball added to inventory");
-      gameData.BallsCapacity++;
-      gameData.pointsToBall -= gameData.requiredPointsToBall;
-    }
+    gameData.PointsToBall += blockInstance.points;
   }
 
   private void InitLevel(int level) {

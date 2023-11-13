@@ -26,12 +26,6 @@ public class PlayerController : AbstractPlayerController {
 
   private int releasedBallsCnt = 0;
 
-  public override void AddBalls(int count) {
-    notLaunchedBalls = count;
-
-    SpawnBall();
-  }
-
   private void Awake() {
     uiManager = Camera.main.GetComponent<UIManager>();
     player = Instantiate(playerPrefab, transform.position, Quaternion.identity);
