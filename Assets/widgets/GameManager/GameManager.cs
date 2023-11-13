@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour {
 
   private UIManager uiManager;
   public GameState gameData;
+  AudioSource audioSrc;
 
   static bool _gameStarted; // false by default
 
@@ -24,10 +25,12 @@ public class GameManager : MonoBehaviour {
 
   private void Start() {
     uiManager = Camera.main.GetComponent<UIManager>();
+    audioSrc = Camera.main.GetComponent<AudioSource>();
     backgroundController = Instantiate(backgroundControllerPrefab);
     InitGameState();
     InitLevel(gameData.level);
     gameData.SubscribePointsToBall(OnPointsToBallChanged);
+    gameData.SubscribePoints(OnPointsGained);
   }
 
   public void StartNewGame() {
@@ -45,22 +48,37 @@ public class GameManager : MonoBehaviour {
     if (Input.GetKeyDown(KeyCode.N)) StartNewGame();
   }
 
-  IEnumerator PlayBonusBallSound(AbstractBlock blockInstance) {
+  IEnumerator PlayBonusBallSound() {
     for (int i = 0; i < 10; i++) {
       yield return new WaitForSeconds(0.2f);
-      blockInstance.PlayOnDestroySound();
+      audioSrc.PlayOneShot(SoundOnPoints, gameData.SfxVolume);
     }
+  }
+
+  public AudioClip SoundOnPoints;
+
+  public void OnPointsGained() {
+    if (!audioSrc) return;
+    if (!gameData.IsSoundOn) return;
+    audioSrc.PlayOneShot(SoundOnPoints, gameData.SfxVolume);
+  }
+
+  public void OnBonusBallGained() {
+    if (!audioSrc) return;
+    if (!gameData.IsSoundOn) return;
+    StartCoroutine(PlayBonusBallSound());
   }
 
   public void OnPointsToBallChanged() {
     if (gameData.PointsToBall < gameData.requiredPointsToBall) return;
     gameData.BallsCapacity += 1;
+    OnBonusBallGained();
     Debug.Log("Ball added to inventory");
     gameData.PointsToBall -= gameData.requiredPointsToBall;
   }
 
   public void OnBlockDestroyed(AbstractBlock blockInstance) {
-    gameData.points += blockInstance.points;
+    gameData.Points += blockInstance.points;
     gameData.PointsToBall += blockInstance.points;
   }
 

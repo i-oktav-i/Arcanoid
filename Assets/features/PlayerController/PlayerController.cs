@@ -12,7 +12,7 @@ public class PlayerController : AbstractPlayerController {
 
   private List<AbstractBall> ballsMag = new();
 
-  private bool blockInput = false;
+  // private bool blockInput = false;
 
   public GameState gameData;
   public UIManager uiManager;
@@ -37,10 +37,11 @@ public class PlayerController : AbstractPlayerController {
     if (isDestroy) return;
     var ballsToSpawn = Math.Min(InitialGameState.BallsMagCapacity, gameData.BallsCapacity);
 
+
     var newBalls = Enumerable.Range(0, ballsToSpawn)
       .Select((idx) => SpawnBall())
       .ToList();
-
+    Debug.Log($"ballsToSpawn {ballsToSpawn} | newBalls.Count {newBalls.Count}");
     ballsMag.AddRange(newBalls);
   }
 
@@ -61,25 +62,19 @@ public class PlayerController : AbstractPlayerController {
 
   private void Update() {
     if (uiManager.IsMenuActive) return;
-    if (!blockInput && Input.GetButtonDown("Fire1") && AmmoCount > 0) {
-      blockInput = true;
+    if (/*!blockInput &&*/ Input.GetButtonDown("Fire1") && AmmoCount > 0) {
+      // blockInput = true;
 
-      // var ballsCount = ballsMag.Count;
-      // for (int i = 0; i < ballsCount; i++) {
-      //   ballsMag[i].transform.SetParent(transform);
-      //   ballsMag[i].Launch(new(600, 600));
-      //   releasedBallsCnt++;
-      // }
-      // ballsMag.Clear();
-
-      var ball = ballsMag[0];
-      ballsMag.RemoveAt(0);
-      ball.transform.SetParent(transform);
-      ball.Launch(new(600, 600));
-      releasedBallsCnt++;
+      var ballsCount = ballsMag.Count;
+      for (int i = 0; i < ballsCount; i++) {
+        ballsMag[i].transform.SetParent(transform);
+        ballsMag[i].Launch(new(600 * Mathf.Pow(-1f, i), 600));
+        releasedBallsCnt++;
+      }
+      ballsMag.Clear();
     }
-    else {
+    /*else {
       blockInput = false;
-    }
+    }*/
   }
 }

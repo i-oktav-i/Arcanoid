@@ -18,7 +18,7 @@ public class BonusBaseScript : MonoBehaviour
     protected virtual void BonusActivate()
     {
       UnityEngine.Debug.Log("bONUS GAINED");
-      prefabmanger.instance.GameData.points += pointsPerActivation;
+      prefabmanger.instance.GameData.Points += pointsPerActivation;
       prefabmanger.instance.GameData.PointsToBall += pointsPerActivation;
     }
 

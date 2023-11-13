@@ -13,6 +13,21 @@ public class GameState : ScriptableObject {
   public int balls = InitialGameState.BallsCapacity;
 
   public int points = InitialGameState.Points;
+  public int Points {
+    get => points;
+    set {
+      points = value;
+      pointsCallbacks.ForEach(callback => callback());
+    }
+  }
+  private List<Action> pointsCallbacks = new();
+  public Action SubscribePoints(Action callback) {
+    pointsCallbacks.Add(callback);
+    return () => pointsCallbacks.Remove(callback);
+  }
+  public void UnsubscribePoints(Action callback) {
+    pointsCallbacks.Remove(callback);
+  }
 
   private int pointsToBall  = InitialGameState.PointsToBall;
   public int PointsToBall {
