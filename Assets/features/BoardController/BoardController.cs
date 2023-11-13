@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.Collections;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -25,6 +24,8 @@ public partial class BoardController : AbstractBoardController {
 
   public GameState gameData;
 
+  AudioSource audioSrc;
+
   private List<Action> blocksEndCallbacks = new();
 
   private int currentBlocksCount = 0;
@@ -36,16 +37,8 @@ public partial class BoardController : AbstractBoardController {
     }
   }
 
-  private void SetMusic() {
-    if (gameData.IsMusicOn) audioSrc.Play();
-    else audioSrc.Stop();
-  }
-
-  AudioSource audioSrc;
   private void Start() {
     audioSrc = Camera.main.GetComponent<AudioSource>();
-    SetMusic();
-    gameData.SubscribeMusicSwitch(SetMusic);
   }
 
   public override void InitBoard(Vector2 position, int level, Action<AbstractBlock> onBlockDestroyed) {
@@ -59,11 +52,10 @@ public partial class BoardController : AbstractBoardController {
     InitPlayer(boardHolder.transform);
   }
 
-  // TODO make sound manager for such methods
-  IEnumerator PlayBonusBallSound(AudioSource audioSrc, AudioClip sound) {
+  IEnumerator PlayBonusBallSound(AbstractBlock blockInstance) {
     for (int i = 0; i < 10; i++) {
       yield return new WaitForSeconds(0.2f);
-      audioSrc.PlayOneShot(sound, SoundConfig.SFXVolumeScale);
+      blockInstance.PlayOnDestroySound();
     }
   }
 
@@ -91,13 +83,12 @@ public partial class BoardController : AbstractBoardController {
           if (type != 4) {
             CurrentBlocksCount -= 1;
           }
-          if (gameData.IsSoundOn) {
-            if (gameData.pointsToBall >= gameData.requiredPointsToBall)
-              StartCoroutine(PlayBonusBallSound(audioSrc, blockInstance.SoundOnDestroy));
-            else
-              audioSrc.PlayOneShot(blockInstance.SoundOnDestroy, SoundConfig.SFXVolumeScale);
-          }
           onBlockDestroyed(blockInstance);
+          if (!gameData.IsSoundOn) return;
+          if (gameData.pointsToBall >= gameData.requiredPointsToBall)
+            StartCoroutine(PlayBonusBallSound(blockInstance));
+          else
+            blockInstance.PlayOnDestroySound();
         });
       });
   }
@@ -126,8 +117,8 @@ public partial class BoardController : AbstractBoardController {
   private void InitPlayer(Transform parent) {
     AbstractPlayerController playerControllerInstance = Instantiate(playerController, new(-0.3f, -10), Quaternion.identity);
     playerControllerInstance.transform.SetParent(parent);
-    // playerControllerInstance.SubscribeBallsEnd(() => RunCallbacks(levelLoseCallbacks));
   }
+
 
   private int GetBLockHits(int level = 0, int maxHits = 0, int currentHits = 0) {
     if (currentHits >= maxHits) return maxHits;

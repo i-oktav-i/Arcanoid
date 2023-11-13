@@ -13,4 +13,5 @@ public abstract class AbstractBlock : MonoBehaviour {
 
   abstract public Action SubscribeDestroy(Action callback);
   abstract public void UnsubscribeDestroy(Action callback);
+  abstract public void PlayOnDestroySound();
 }

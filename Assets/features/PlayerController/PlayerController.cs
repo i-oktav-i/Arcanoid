@@ -15,6 +15,7 @@ public class PlayerController : AbstractPlayerController {
   private bool blockInput = false;
 
   public GameState gameData;
+  public UIManager uiManager;
 
   private bool isDestroy = false;
   private void OnDestroy() => isDestroy = true;
@@ -25,7 +26,14 @@ public class PlayerController : AbstractPlayerController {
 
   private int releasedBallsCnt = 0;
 
+  public override void AddBalls(int count) {
+    notLaunchedBalls = count;
+
+    SpawnBall();
+  }
+
   private void Awake() {
+    uiManager = Camera.main.GetComponent<UIManager>();
     player = Instantiate(playerPrefab, transform.position, Quaternion.identity);
     player.transform.SetParent(transform);
     FillBallsMag();
@@ -58,12 +66,20 @@ public class PlayerController : AbstractPlayerController {
   }
 
   private void Update() {
+    if (uiManager.IsMenuActive) return;
     if (!blockInput && Input.GetButtonDown("Fire1") && AmmoCount > 0) {
       blockInput = true;
 
-      var ball = ballsMag[0];
-      ballsMag.RemoveAt(0); // doesn't really matter if it's 0 or len - 1, just need pop
+      // var ballsCount = ballsMag.Count;
+      // for (int i = 0; i < ballsCount; i++) {
+      //   ballsMag[i].transform.SetParent(transform);
+      //   ballsMag[i].Launch(new(600, 600));
+      //   releasedBallsCnt++;
+      // }
+      // ballsMag.Clear();
 
+      var ball = ballsMag[0];
+      ballsMag.RemoveAt(0);
       ball.transform.SetParent(transform);
       ball.Launch(new(600, 600));
       releasedBallsCnt++;

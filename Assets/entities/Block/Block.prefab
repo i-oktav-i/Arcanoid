@@ -347,6 +347,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: ef6824e158b3bc04ca0b85645590dc03, type: 3}
   - {fileID: 21300000, guid: 5af979d64f597254e88bcf8b46bcf20e, type: 3}
   - {fileID: 21300000, guid: c1b817ad6eff37f47b28bfc5309d5fd4, type: 3}
+  gameData: {fileID: 11400000, guid: fa19b9d67d99a4a489fb4f585104d338, type: 2}
 --- !u!61 &-5460379706122401903
 BoxCollider2D:
   m_ObjectHideFlags: 0

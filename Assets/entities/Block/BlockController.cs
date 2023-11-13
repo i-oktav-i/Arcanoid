@@ -13,6 +13,9 @@ public class BlockController : AbstractBlock {
   public GameObject bonus;
   private SpriteRenderer spritRenderer;
 
+  AudioSource audioSrc;
+  public GameState gameData;
+
   private List<Action> destroyCallbacks = new();
 
   [SerializeField]
@@ -37,6 +40,10 @@ public class BlockController : AbstractBlock {
     hpText = GetComponentInChildren<TextMeshProUGUI>();
   }
 
+  private void Start() {
+    audioSrc = Camera.main.GetComponent<AudioSource>();
+  }
+
   public override void DealDamage() {
     if (HitPoints == 1 && UnityEngine.Random.Range(0, 100) <= 26)
       SpawnBonus(this.transform.position);
@@ -56,10 +63,15 @@ public class BlockController : AbstractBlock {
 
     return () => destroyCallbacks.Remove(callback);
   }
+
   public override void UnsubscribeDestroy(Action callback) {
     destroyCallbacks.Remove(callback);
   }
 
+  public override void PlayOnDestroySound() {
+    if (!audioSrc) return;
+    audioSrc.PlayOneShot(SoundOnDestroy, gameData.SfxVolume);
+  }
   public override void SetBlockType(int type) {
     spritRenderer.sprite = sprites[type % sprites.Length];
     SetHitPoints(GameConfig.blockHPs[type]);
@@ -96,4 +108,3 @@ public class BlockController : AbstractBlock {
     bonusadd.AddComponent(typeof(BonusBaseScript));
   }
 }
-
