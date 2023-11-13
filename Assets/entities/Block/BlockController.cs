@@ -38,8 +38,8 @@ public class BlockController : AbstractBlock {
   }
 
   public override void DealDamage() {
-    if (HitPoints == 1) {
-      if (UnityEngine.Random.RandomRange(0, 100) <= 26) { SpawnBonus(this.transform.position); } }
+    if (HitPoints == 1 && UnityEngine.Random.Range(0, 100) <= 26)
+      SpawnBonus(this.transform.position);
     HitPoints -= 1;
   }
 
