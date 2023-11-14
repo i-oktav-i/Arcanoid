@@ -1,5 +1,6 @@
 ﻿
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour {
   enum ActiveLayout {
@@ -53,6 +54,13 @@ public class UIManager : MonoBehaviour {
     Time.timeScale = 0f;
     mainCanvas.SetActive(true);
     mainMenuController.SetSoundSettings();
+    string playLabel = isEnd ? "NEW GAME" : "PLAY";
+    mainMenuController.playButton.GetComponentInChildren<Text>().text = playLabel;
+    mainMenuController.playButton.onClick.RemoveAllListeners();
+    mainMenuController.playButton.onClick.AddListener(() => {
+      if (isEnd) Camera.main.GetComponent<GameManager>().StartNewGame();
+      else HideMainMenu();
+    });
     mainMenuController.exitButton.gameObject.SetActive(isEnd);
   }
 

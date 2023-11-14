@@ -100,7 +100,7 @@ public class GameManager : MonoBehaviour {
     });
     gameData.SubscribeBallsEnd(() => {
       Debug.Log($"Level {level} lose.");
-      StartNewGame();
+      uiManager.ShowMainMenu(true);
     });
 
     boardController.transform.SetParent(boardControllerHolder.transform);
