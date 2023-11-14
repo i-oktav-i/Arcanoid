@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
 
@@ -9,8 +10,10 @@ public class BonusBaseScript : MonoBehaviour
 {
     protected Color color = Color.yellow;
     protected Color textColor = Color.black;
-    protected String text = "+100";
+    protected String text = BonusLabels.PointsBonusLabel;
     public GameObject bonusPrefab;
+
+    protected GameObject playerObject;
 
     private const int pointsPerActivation = 100;
     private const float deltaY = 0.02f;
@@ -24,9 +27,10 @@ public class BonusBaseScript : MonoBehaviour
 
     protected virtual void initializeFields(){}
 
-    void initializeBonus()
+    protected virtual void initializeBonus()
     {
         initializeFields();
+        playerObject = GameObject.Find("PlayerRender");
         gameObject.GetComponent<SpriteRenderer>().color = color;
         var textComponent = gameObject.transform.GetComponentInChildren<TextMeshProUGUI>();
         textComponent.text = text;

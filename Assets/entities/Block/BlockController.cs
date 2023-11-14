@@ -2,7 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.Hardware;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class BlockController : AbstractBlock {
   private new Rigidbody2D rigidbody;
@@ -45,7 +47,7 @@ public class BlockController : AbstractBlock {
   }
 
   public override void DealDamage() {
-    if (HitPoints == 1 && UnityEngine.Random.Range(0, 100) <= 26)
+    if (HitPoints == 1 && UnityEngine.Random.Range(0, 100) <= 100)
       SpawnBonus(this.transform.position);
     HitPoints -= 1;
   }
@@ -104,7 +106,25 @@ public class BlockController : AbstractBlock {
   }
 
   public void SpawnBonus(Vector2 position) {
+    Debug.Log("AAAAAAAAAAAAAAAAAAA");
     var bonusadd = Instantiate(prefabmanger.instance.bonus, position, Quaternion.identity);
-    bonusadd.AddComponent(typeof(BonusBaseScript));
+    switch (Random.Range(0, 5)) {
+      case 0:
+        bonusadd.AddComponent(typeof(BonusBaseScript));
+        break;
+      case 1:
+        bonusadd.AddComponent(typeof(SimpleBonus));
+        break;
+      case 2:
+        bonusadd.AddComponent(typeof(ExpandBonus));
+        break;
+      case 3:
+        bonusadd.AddComponent(typeof(ShrinkBonus));
+        break;
+      case 4:
+        bonusadd.AddComponent(typeof(StickyBonus));
+        break;
+    }
+
   }
 }
