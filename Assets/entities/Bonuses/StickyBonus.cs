@@ -16,6 +16,10 @@ public class StickyBonus: BonusBaseScript {
 
   protected override void BonusActivate() {
     base.BonusActivate();
+    StickyBehaviour nall;
+    if (!playerObject.TryGetComponent<StickyBehaviour>(out nall)) {
+      playerObject.AddComponent(typeof(StickyBehaviour));
+    }
 
   }
 }

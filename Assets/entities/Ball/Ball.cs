@@ -14,7 +14,7 @@ public class Ball : AbstractBall {
     if (rigidbody.bodyType == RigidbodyType2D.Dynamic) return;
 
     rigidbody.bodyType = RigidbodyType2D.Dynamic;
-    rigidbody.AddForce(force);
+    rigidbody.totalForce = force;
   }
 
   private void Awake() {

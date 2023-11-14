@@ -62,9 +62,7 @@ public class PlayerController : AbstractPlayerController {
 
   private void Update() {
     if (uiManager.IsMenuActive) return;
-    if (/*!blockInput &&*/ Input.GetButtonDown("Fire1") && AmmoCount > 0) {
-      // blockInput = true;
-
+    if (Input.GetButtonDown("Fire1") && AmmoCount > 0) {
       var ballsCount = ballsMag.Count;
       for (int i = 0; i < ballsCount; i++) {
         ballsMag[i].transform.SetParent(transform);
@@ -73,8 +71,5 @@ public class PlayerController : AbstractPlayerController {
       }
       ballsMag.Clear();
     }
-    /*else {
-      blockInput = false;
-    }*/
   }
 }

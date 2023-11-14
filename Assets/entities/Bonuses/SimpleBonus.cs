@@ -17,8 +17,11 @@ public class SimpleBonus: BonusBaseScript {
   protected override void BonusActivate() {
     base.BonusActivate();
 
-    if (playerObject.transform.localScale.x < 1.5 * 1.5) {
-      playerObject.transform.localScale.Scale(new Vector3(1.5f, 1f, 1f));
+    StickyBehaviour stickBeh;
+
+    if (playerObject.TryGetComponent<StickyBehaviour>(out stickBeh)) {
+      stickBeh.ReleaseBall();
+      Destroy(stickBeh);
     }
   }
 }
