@@ -17,8 +17,6 @@ public class ExpandBonus: BonusBaseScript {
   protected override void BonusActivate() {
     base.BonusActivate();
 
-    Debug.Log($"DEB AG {playerObject.transform.localScale}");
-
     if (playerObject.transform.localScale.x / 4f < 1.5 * 1.5) {
       playerObject.transform.localScale = new Vector3(
         1.5f * playerObject.transform.localScale.x,
